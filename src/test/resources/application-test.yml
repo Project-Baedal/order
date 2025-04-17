@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MYSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+
+logging:
+  level.org.hibernate:
+    orm.jdbc.bind: TRACE
+
+servers:
+  order:
+    url: http://localhost:8081/api
+  product:
+    url: http://localhost:8082/api
+  cart:
+    url: http://localhost:8083/api
