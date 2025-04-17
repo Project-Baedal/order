@@ -16,4 +16,13 @@ spring:
         format_sql: true
 
 server:
-  port: 8082
+  port: 8084
+
+
+servers:
+  order:
+    url: http://localhost:8081/api
+  product:
+    url: http://localhost:8082/api
+  cart:
+    url: http://localhost:8083/api
