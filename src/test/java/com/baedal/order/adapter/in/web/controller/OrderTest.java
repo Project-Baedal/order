@@ -47,6 +47,8 @@ class OrderTest extends IntegrationTest {
     AddOrderRequest req = fixtureMonkey.giveMeOne(AddOrderRequest.class);
 
     // when
+    when(storeServiceClient.findByStoreId(any())).thenReturn(GetStoreResponse.builder().build());
+
     ResponseEntity<String> response = restTemplate.postForEntity(
         orderMappingURL.getAddOrder(),
         req,
