@@ -1,7 +1,9 @@
 package com.baedal.order.application.mapper;
 
 import com.baedal.order.application.command.AddOrderCommand;
+import com.baedal.order.application.command.AddOrderCommand.ProductInfo;
 import com.baedal.order.domain.model.AddOrder;
+import com.baedal.order.domain.model.AddOrderProduct;
 import com.baedal.order.domain.model.Order;
 import com.baedal.order.domain.product.Product;
 import java.util.List;
@@ -18,4 +20,7 @@ public interface OrderApplicationMapper {
 
   AddOrderCommand.Response toResponse(Order order);
 
+  @Mapping(target = "productName", source = "name")
+  @Mapping(target = "productPrice", source = "price")
+  ProductInfo toResponse(AddOrderProduct product);
 }
