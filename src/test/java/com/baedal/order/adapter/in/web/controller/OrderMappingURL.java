@@ -8,7 +8,7 @@ public class OrderMappingURL {
     this.BASE_URL = BASE_URL + port + "/api/order";
   }
 
-  private final String ADD_ORDER = "";
+  private final String ADD_ORDER = "/";
 
   public String getAddOrder() {
     return BASE_URL + ADD_ORDER;
