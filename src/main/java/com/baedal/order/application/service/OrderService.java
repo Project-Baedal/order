@@ -4,6 +4,7 @@ import com.baedal.order.application.command.AddOrderCommand;
 import com.baedal.order.application.mapper.OrderApplicationMapper;
 import com.baedal.order.application.port.in.OrderUseCase;
 import com.baedal.order.application.port.out.CartClientPort;
+import com.baedal.order.application.port.out.MessageSenderPort;
 import com.baedal.order.application.port.out.OrderRepositoryPort;
 import com.baedal.order.application.port.out.ProductClientPort;
 import com.baedal.order.application.port.out.StoreClientPort;
@@ -25,6 +26,7 @@ public class OrderService implements OrderUseCase {
   private final CartClientPort cartClientPort;
   private final ProductClientPort productClientPort;
   private final StoreClientPort storeClientPort;
+  private final MessageSenderPort messageSenderPort;
 
   @Override
   @Transactional
@@ -45,6 +47,7 @@ public class OrderService implements OrderUseCase {
     Order order = orderRepository.save(addOrder);
 
     // 주문 ID 값과 함께 결제 도메인으로 메세지 큐를 전달한다.
+    messageSenderPort.sendPaymentRequest(order.getOrderId(), req.getPaymentInfo());
 
     return mapper.toResponse(order);
   }
