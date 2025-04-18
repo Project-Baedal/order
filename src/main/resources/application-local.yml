@@ -1,3 +1,6 @@
+server:
+  port: 8084
+
 spring:
 
   datasource:
@@ -15,8 +18,11 @@ spring:
         show_sql: true
         format_sql: true
 
-server:
-  port: 8084
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:10000
+    producer:
+      bootstrap-servers: localhost:10000
 
 
 servers:
@@ -26,3 +32,5 @@ servers:
     url: http://localhost:8082/api
   cart:
     url: http://localhost:8083/api
+
+
