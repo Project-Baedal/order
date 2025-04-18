@@ -3,13 +3,6 @@ server:
 
 spring:
 
-  datasource:
-    url: jdbc:postgresql://localhost:5436/order
-    username: order
-    password: order
-    driver-class-name: org.postgresql.Driver
-
-
   jpa:
     hibernate:
       ddl-auto: update

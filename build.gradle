@@ -43,9 +43,12 @@ dependencies {
     // Kafka
     implementation("org.springframework.kafka:spring-kafka:3.3.4")
 
+    // H2
+    runtimeOnly 'com.h2database:h2'
+
+
     // Test
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation("com.h2database:h2:2.3.232")
     testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.1.11")
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
