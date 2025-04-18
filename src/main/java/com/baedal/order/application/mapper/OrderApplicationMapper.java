@@ -18,7 +18,7 @@ public interface OrderApplicationMapper {
   @Mapping(target = "paymentMethod", source = "req.paymentInfo.paymentMethod")
   AddOrder toAddOrder(AddOrderCommand.Request req, List<Product> products);
 
-  AddOrderCommand.Response toResponse(Order order);
+  AddOrderCommand.Response toResponse(Order order, String storeName, int totalProductAmount);
 
   @Mapping(target = "productName", source = "name")
   @Mapping(target = "productPrice", source = "price")
