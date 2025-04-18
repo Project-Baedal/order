@@ -20,7 +20,7 @@ server:
 
 
 servers:
-  order:
+  store:
     url: http://localhost:8081/api
   product:
     url: http://localhost:8082/api
