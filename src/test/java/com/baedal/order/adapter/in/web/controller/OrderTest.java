@@ -6,15 +6,19 @@ import com.baedal.order.adapter.in.web.dto.request.AddOrderRequest;
 import com.baedal.order.adapter.out.api.client.CartServiceClient;
 import com.baedal.order.adapter.out.api.client.ProductServiceClient;
 import com.baedal.order.adapter.out.api.client.StoreServiceClient;
+import com.baedal.order.adapter.out.api.dto.GetStoreResponse;
 import com.baedal.order.adapter.out.messaging.KafkaSender;
 import com.baedal.order.global.test.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 
 class OrderTest extends IntegrationTest {
@@ -27,13 +31,13 @@ class OrderTest extends IntegrationTest {
   }
 
 
-  @Mock
+  @MockitoBean
   private CartServiceClient cartServiceClient;
-  @Mock
+  @MockitoBean
   private StoreServiceClient storeServiceClient;
-  @Mock
+  @MockitoBean
   private ProductServiceClient productServiceClient;
-  @Mock
+  @MockitoBean
   private KafkaSender kafkaSender;
 
   @Test
