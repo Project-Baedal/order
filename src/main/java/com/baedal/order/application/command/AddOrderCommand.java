@@ -18,6 +18,7 @@ public class AddOrderCommand {
     private String phoneNumber;
     private PaymentInfo paymentInfo;
     private int totalAmount;
+    private int deliveryAmount;
   }
 
   @Getter

@@ -16,6 +16,7 @@ public class Order {
   private String phoneNumber;
   private String paymentMethod;
   private int totalAmount;
+  private int deliveryAmount;
   private String orderStatus;
   private LocalDateTime orderDate;
 

@@ -13,6 +13,7 @@ public class AddOrder {
   private final String deliveryAddress;
   private final String phoneNumber;
   private final String paymentMethod;
+  private final int deliveryAmount;
   private final int totalAmount;
   private final String orderStatus;
   private final LocalDateTime orderDate;
@@ -21,11 +22,13 @@ public class AddOrder {
 
   @Builder
   public AddOrder(Long storeId, String deliveryAddress, String phoneNumber,
-      String paymentMethod, int totalAmount, List<AddOrderProduct> products) {
+      String paymentMethod, int deliveryAmount, int totalAmount,
+      List<AddOrderProduct> products) {
     this.storeId = storeId;
     this.deliveryAddress = deliveryAddress;
     this.phoneNumber = phoneNumber;
     this.paymentMethod = paymentMethod;
+    this.deliveryAmount = deliveryAmount;
     this.totalAmount = totalAmount;
     this.orderStatus = OrderStatus.PENDING.toString();
     this.orderDate = LocalDateTime.now();

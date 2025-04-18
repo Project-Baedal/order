@@ -45,6 +45,9 @@ public class OrderEntity {
   private String paymentMethod;
 
   @Column(nullable = false)
+  private int deliveryAmount;
+
+  @Column(nullable = false)
   private int totalAmount;
 
   @Column(nullable = false)
@@ -55,13 +58,14 @@ public class OrderEntity {
 
   @Builder
   public OrderEntity(Long storeId, List<ProductEntity> products, String deliveryAddress,
-      String phoneNumber, String paymentMethod, int totalAmount, String orderStatus,
-      LocalDateTime createdAt) {
+      String phoneNumber, String paymentMethod, int deliveryAmount, int totalAmount,
+      String orderStatus, LocalDateTime createdAt) {
     this.storeId = storeId;
     this.products = products;
     this.deliveryAddress = deliveryAddress;
     this.phoneNumber = phoneNumber;
     this.paymentMethod = paymentMethod;
+    this.deliveryAmount = deliveryAmount;
     this.totalAmount = totalAmount;
     this.orderStatus = orderStatus;
     this.createdAt = createdAt;
