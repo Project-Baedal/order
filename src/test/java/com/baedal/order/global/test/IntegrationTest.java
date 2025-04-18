@@ -2,6 +2,7 @@ package com.baedal.order.global.test;
 
 import com.baedal.order.global.cleaner.PostgresCleaner;
 import com.navercorp.fixturemonkey.FixtureMonkey;
+import java.util.Random;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,8 @@ abstract public class IntegrationTest {
 
   @Autowired
   protected FixtureMonkey fixtureMonkey;
+
+  protected Random random = new Random();
 
   @AfterEach
   void tearDown() {

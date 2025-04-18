@@ -47,7 +47,11 @@ class OrderTest extends IntegrationTest {
     AddOrderRequest req = fixtureMonkey.giveMeOne(AddOrderRequest.class);
 
     // when
-    when(storeServiceClient.findByStoreId(any())).thenReturn(GetStoreResponse.builder().build());
+    GetStoreResponse storeResponse = fixtureMonkey.giveMeBuilder(GetStoreResponse.class)
+        .set("deliveryAmount", req.getDeliveryAmount())
+        .sample();
+
+    when(storeServiceClient.findByStoreId(any())).thenReturn(storeResponse);
 
     ResponseEntity<String> response = restTemplate.postForEntity(
         orderMappingURL.getAddOrder(),
@@ -57,6 +61,36 @@ class OrderTest extends IntegrationTest {
 
     // then
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+  }
+
+  @Test
+  @DisplayName("addOrder 잘못된 배달비")
+  void addOrder_fail_1() {
+    // given
+    AddOrderRequest req = fixtureMonkey.giveMeOne(AddOrderRequest.class);
+
+    // when
+
+    // 동일한 배달비가 입력되지 않기 위한 처리
+    int randomInt = random.nextInt(0,99999);
+    int deliveryAmountRequest = req.getDeliveryAmount();
+    int deliveryAmount = (randomInt == deliveryAmountRequest) ? randomInt + 1 : randomInt;
+
+    GetStoreResponse storeResponse = fixtureMonkey.giveMeBuilder(GetStoreResponse.class)
+        .set("deliveryAmount", deliveryAmount)
+        .sample();
+
+    when(storeServiceClient.findByStoreId(any())).thenReturn(storeResponse);
+
+    ResponseEntity<String> response = restTemplate.postForEntity(
+        orderMappingURL.getAddOrder(),
+        req,
+        String.class
+    );
+
+    // then
+    assertThat(response.getStatusCode()).isNotEqualTo(HttpStatus.OK);
 
   }
 }
