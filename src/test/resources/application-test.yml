@@ -1,0 +1,29 @@
+spring:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:10000
+    producer:
+      bootstrap-servers: localhost:10000
+
+
+logging:
+  level.org.hibernate:
+    orm.jdbc.bind: TRACE
+
+servers:
+  store:
+    url: http://localhost:8081/api/store/
+  product:
+    url: http://localhost:8082/api/product/
+  cart:
+    url: http://localhost:8083/api/cart/
