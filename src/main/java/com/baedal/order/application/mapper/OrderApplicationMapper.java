@@ -13,6 +13,7 @@ public interface OrderApplicationMapper {
 
   // 주문 등록
   @Mapping(target = "products", source = "products")
+  @Mapping(target = "paymentMethod", source = "req.paymentInfo.paymentMethod")
   AddOrder toAddOrder(AddOrderCommand.Request req, List<Product> products);
 
   AddOrderCommand.Response toResponse(Order order);

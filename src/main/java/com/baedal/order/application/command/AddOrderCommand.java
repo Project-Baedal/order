@@ -16,7 +16,7 @@ public class AddOrderCommand {
     private List<Long> productIds;
     private String deliveryAddress;
     private String phoneNumber;
-    private String paymentMethod;
+    private PaymentInfo paymentInfo;
     private int totalAmount;
   }
 
@@ -43,6 +43,12 @@ public class AddOrderCommand {
   public static class ProductInfo {
     private String productName;
     private int productPrice;
+  }
+
+  @Getter
+  @Builder
+  public static class PaymentInfo {
+    private String paymentMethod;
   }
 
 }

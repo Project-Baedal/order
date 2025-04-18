@@ -29,8 +29,8 @@ public class AddOrderRequest {
   private String phoneNumber;
 
   @Schema(description = "결제 수단")
-  @NotBlank
-  private String paymentMethod;
+  @NotNull
+  private PaymentInfo paymentInfo;
 
   @Schema(description = "총 결제 금액")
   @Positive
