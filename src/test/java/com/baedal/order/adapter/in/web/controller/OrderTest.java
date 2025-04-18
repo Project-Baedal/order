@@ -6,6 +6,7 @@ import com.baedal.order.adapter.in.web.dto.request.AddOrderRequest;
 import com.baedal.order.adapter.out.api.client.CartServiceClient;
 import com.baedal.order.adapter.out.api.client.ProductServiceClient;
 import com.baedal.order.adapter.out.api.client.StoreServiceClient;
+import com.baedal.order.adapter.out.messaging.KafkaSender;
 import com.baedal.order.global.test.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +33,8 @@ class OrderTest extends IntegrationTest {
   private StoreServiceClient storeServiceClient;
   @Mock
   private ProductServiceClient productServiceClient;
+  @Mock
+  private KafkaSender kafkaSender;
 
   @Test
   @DisplayName("addOrder 성공")
