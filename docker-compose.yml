@@ -12,6 +12,16 @@ services:
       POSTGRES_PASSWORD: order
       POSTGRES_DB: order
 
+  redis:
+    container_name: redis-order
+    image: redis:7.4
+    hostname: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
 volumes:
   postgres-data:
+  redis-data:
 
