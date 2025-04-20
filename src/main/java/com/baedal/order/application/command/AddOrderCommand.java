@@ -1,6 +1,5 @@
 package com.baedal.order.application.command;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,17 +24,13 @@ public class AddOrderCommand {
   @Builder
   public static class Response {
 
-    private String orderStatus;
-    private String storeName;
-    private LocalDateTime orderDate;
-    private Long orderId;
-    private List<ProductInfo> productInfo;
-    private int totalAmount;
-    private int totalProductAmount;
-    private int deliveryAmount;
-    private String paymentMethod;
-    private String deliveryAddress;
-    private String phoneNumber;
+    private String tid;
+    private String nextRedirectAppUrl;
+    private String nextRedirectMobileUrl;
+    private String nextRedirectPcUrl;
+    private String androidAppScheme;
+    private String iosAppScheme;
+    private String createdAt;
 
   }
 
@@ -50,6 +45,7 @@ public class AddOrderCommand {
   @Builder
   public static class PaymentInfo {
     private String paymentMethod;
+    private int totalAmount;
   }
 
 }

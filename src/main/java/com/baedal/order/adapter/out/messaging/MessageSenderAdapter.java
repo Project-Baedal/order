@@ -2,6 +2,9 @@ package com.baedal.order.adapter.out.messaging;
 
 import com.baedal.order.application.command.AddOrderCommand.PaymentInfo;
 import com.baedal.order.application.port.out.MessageSenderPort;
+import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
+import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
+import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,5 +18,20 @@ public class MessageSenderAdapter implements MessageSenderPort {
   @Override
   public void sendPaymentRequest(Long orderId, PaymentInfo req) {
     kafkaSender.sendMessage("payment.paymentRequest", orderId.toString(), req);
+  }
+
+  @Override
+  public void validateCartOrderInfo(ValidateCartOrderInfo.Request req) {
+    kafkaSender.sendMessage("cart.validateCartOrderInfo", req.getOrderTransactionId(), req);
+  }
+
+  @Override
+  public void validateProductOrderInfo(ValidateProductOrderInfo.Request req) {
+    kafkaSender.sendMessage("cart.validateProductOrderInfo", req.getOrderTransactionId(),req);
+  }
+
+  @Override
+  public void validateStoreOrderInfo(ValidateStoreOrderInfo.Request req) {
+    kafkaSender.sendMessage("cart.validateStoreOrderInfo", req.getOrderTransactionId(), req);
   }
 }

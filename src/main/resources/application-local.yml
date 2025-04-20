@@ -25,5 +25,6 @@ servers:
     url: http://localhost:8082/api/product/
   cart:
     url: http://localhost:8083/api/cart/
-
+  payment:
+    url: http://localhost:8085/api/payment/
 

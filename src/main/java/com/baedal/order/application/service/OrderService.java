@@ -3,18 +3,13 @@ package com.baedal.order.application.service;
 import com.baedal.order.application.command.AddOrderCommand;
 import com.baedal.order.application.mapper.OrderApplicationMapper;
 import com.baedal.order.application.port.in.OrderUseCase;
-import com.baedal.order.application.port.out.CartClientPort;
 import com.baedal.order.application.port.out.MessageSenderPort;
-import com.baedal.order.application.port.out.OrderRepositoryPort;
-import com.baedal.order.application.port.out.ProductClientPort;
-import com.baedal.order.application.port.out.StoreClientPort;
-import com.baedal.order.domain.business.OrderValidator;
-import com.baedal.order.domain.model.AddOrder;
-import com.baedal.order.domain.model.Order;
-import com.baedal.order.domain.product.Product;
-import com.baedal.order.domain.store.Store;
-import java.util.ArrayList;
-import java.util.List;
+import com.baedal.order.application.port.out.OrderCacheRepositoryPort;
+import com.baedal.order.application.port.out.PaymentClientPort;
+import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
+import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
+import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
+import com.baedal.order.domain.payment.GetPaymentUrl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,38 +19,38 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService implements OrderUseCase {
 
   private final OrderApplicationMapper mapper;
-  private final OrderRepositoryPort orderRepository;
-  private final CartClientPort cartClientPort;
-  private final ProductClientPort productClientPort;
-  private final StoreClientPort storeClientPort;
+  private final OrderCacheRepositoryPort orderCacheRepository;
   private final MessageSenderPort messageSenderPort;
+  private final PaymentClientPort paymentClientPort;
 
   @Override
   @Transactional
   public AddOrderCommand.Response addOrder(AddOrderCommand.Request req) {
 
-    // 검증을 위한 클래스
-    OrderValidator validator = new OrderValidator();
+    // note. 수정 예정
+    // 회원ID
+    String userId = "1";
 
-    // 1. 장바구니 도메인에서 CustomerId 를 활용해 장바구니 목록을 가져오고, Request 값과 동일한지 검증 한다
-    // cartClientPort.findByCustomerId(req.getCustomerId());
+    // 상태 추적을 위한 고유값(UUID) 생성 및 캐시 저장
+    String orderTransactionId = orderCacheRepository.generateAndSaveOrderTransactionId();
 
-    // 2. 주문 도메인에서 상품명/가격을 조회한다.
-    // productClientPort.findByProductIds(req.getProductIds());
-    List<Product> products = new ArrayList<>();
-    int totalProductAmount = 0;
+    // 전달 받은 장바구니 값과 저장된 장바구니의 값이 동일한지 확인
+    ValidateCartOrderInfo.Request cartReq = mapper.validateCartOrderInfoToDomain(req, orderTransactionId);
+    messageSenderPort.validateCartOrderInfo(cartReq);
 
-    // 3. 매장 도메인에서 상품을 갖고 있는 매장의 상태 값을 검증하고 배달비를 조회한다.
-    Store store = storeClientPort.findByStoreId(req.getStoreId());
-    validator.checkDeliveryAmountMatches(req, store);
+    // 상품이 판매 중인지 상태 확인
+    ValidateProductOrderInfo.Request productReq = mapper.validateProductOrderInfoToDomain(req, orderTransactionId);
+    messageSenderPort.validateProductOrderInfo(productReq);
 
-    // 위의 검증이 모두 통과하였을 경우, 주문 데이터를 생성한다. 이때 Status 값은 Pending ( 결제 대기 ) 상태
-    AddOrder addOrder = mapper.toAddOrder(req, products);
-    Order order = orderRepository.save(addOrder);
+    // 매장이 영업 중인지 상태 확인
+    ValidateStoreOrderInfo.Request storeReq = mapper.validateStoreOrderInfoToDomain(req, orderTransactionId);
+    messageSenderPort.validateStoreOrderInfo(storeReq);
 
-    // 주문 ID 값과 함께 결제 도메인으로 메세지 큐를 전달한다.
-    messageSenderPort.sendPaymentRequest(order.getOrderId(), req.getPaymentInfo());
-
-    return mapper.toResponse(order, store.getStoreName(), totalProductAmount);
+    // 결제 요청 전송 및 결제 URL 반환
+    GetPaymentUrl.Request paymentRequest = mapper.getPaymentUrlToDomain(
+        req, orderTransactionId, userId
+    );
+    GetPaymentUrl.Response paymentResponse = paymentClientPort.getPaymentUrl(paymentRequest);
+    return mapper.getPaymentUrlToResponse(paymentResponse);
   }
 }
