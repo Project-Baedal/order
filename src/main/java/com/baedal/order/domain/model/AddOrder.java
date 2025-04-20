@@ -1,6 +1,5 @@
 package com.baedal.order.domain.model;
 
-import com.baedal.order.adapter.out.persistence.enums.OrderStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;

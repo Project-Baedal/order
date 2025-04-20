@@ -1,5 +1,6 @@
 package com.baedal.order.adapter.out.persistence.entity;
 
+import com.baedal.order.adapter.out.persistence.enums.OrderEntityStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,7 +52,7 @@ public class OrderEntity {
   private int totalAmount;
 
   @Column(nullable = false)
-  private String orderStatus;
+  private OrderEntityStatus orderStatus;
 
   @Column(nullable = false)
   private LocalDateTime createdAt;
@@ -59,7 +60,7 @@ public class OrderEntity {
   @Builder
   public OrderEntity(Long storeId, List<ProductEntity> products, String deliveryAddress,
       String phoneNumber, String paymentMethod, int deliveryAmount, int totalAmount,
-      String orderStatus, LocalDateTime createdAt) {
+      OrderEntityStatus orderStatus, LocalDateTime createdAt) {
     this.storeId = storeId;
     this.products = products;
     this.deliveryAddress = deliveryAddress;
