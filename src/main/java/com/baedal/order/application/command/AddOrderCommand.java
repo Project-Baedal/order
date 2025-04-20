@@ -16,7 +16,6 @@ public class AddOrderCommand {
     private String deliveryAddress;
     private String phoneNumber;
     private PaymentInfo paymentInfo;
-    private int totalAmount;
     private int deliveryAmount;
   }
 
@@ -32,13 +31,6 @@ public class AddOrderCommand {
     private String iosAppScheme;
     private String createdAt;
 
-  }
-
-  @Getter
-  @Builder
-  public static class ProductInfo {
-    private String productName;
-    private int productPrice;
   }
 
   @Getter

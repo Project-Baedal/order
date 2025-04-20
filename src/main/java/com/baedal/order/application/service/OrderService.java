@@ -9,7 +9,7 @@ import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
-import com.baedal.order.domain.payment.GetPaymentUrl;
+import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

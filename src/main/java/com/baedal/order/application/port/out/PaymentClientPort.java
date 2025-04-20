@@ -1,6 +1,6 @@
 package com.baedal.order.application.port.out;
 
-import com.baedal.order.domain.payment.GetPaymentUrl;
+import com.baedal.order.domain.model.payment.GetPaymentUrl;
 
 public interface PaymentClientPort {
 

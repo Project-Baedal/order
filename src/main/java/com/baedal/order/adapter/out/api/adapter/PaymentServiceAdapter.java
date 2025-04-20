@@ -5,7 +5,7 @@ import com.baedal.order.adapter.out.api.dto.GetPaymentUrlRequest;
 import com.baedal.order.adapter.out.api.dto.GetPaymentUrlResponse;
 import com.baedal.order.adapter.out.api.mapper.PaymentApiMapper;
 import com.baedal.order.application.port.out.PaymentClientPort;
-import com.baedal.order.domain.payment.GetPaymentUrl;
+import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -3,7 +3,6 @@ package com.baedal.order.adapter.in.web.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.util.List;
 import lombok.Builder;
@@ -29,13 +28,9 @@ public class AddOrderRequest {
   @NotBlank
   private String phoneNumber;
 
-  @Schema(description = "결제 수단")
+  @Schema(description = "결제 정보")
   @NotNull
   private PaymentInfo paymentInfo;
-
-  @Schema(description = "총 결제 금액")
-  @Positive
-  private int totalAmount;
 
   @Schema(description = "배달 금액")
   @PositiveOrZero

@@ -1,4 +1,4 @@
-package com.baedal.order.domain.payment;
+package com.baedal.order.domain.model.payment;
 
 import lombok.Builder;
 import lombok.Getter;

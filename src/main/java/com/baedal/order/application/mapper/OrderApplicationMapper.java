@@ -1,36 +1,22 @@
 package com.baedal.order.application.mapper;
 
 import com.baedal.order.application.command.AddOrderCommand;
-import com.baedal.order.application.command.AddOrderCommand.ProductInfo;
-import com.baedal.order.domain.model.AddOrder;
-import com.baedal.order.domain.model.AddOrderProduct;
-import com.baedal.order.domain.model.Order;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
-import com.baedal.order.domain.payment.GetPaymentUrl;
-import com.baedal.order.domain.product.Product;
-import java.util.List;
+import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface OrderApplicationMapper {
 
-  // 주문 등록
-  @Mapping(target = "products", source = "products")
-  @Mapping(target = "paymentMethod", source = "req.paymentInfo.paymentMethod")
-  AddOrder toAddOrder(AddOrderCommand.Request req, List<Product> products);
-
-  AddOrderCommand.Response toResponse(Order order, String storeName, int totalProductAmount);
-
-  @Mapping(target = "productName", source = "name")
-  @Mapping(target = "productPrice", source = "price")
-  ProductInfo toResponse(AddOrderProduct product);
+  // 주문 요청
 
   @Mapping(target = "partnerOrderId", source = "orderId")
   @Mapping(target = "partnerUserId", source = "userId")
   @Mapping(target = "itemName", source = "req.storeId")
+  @Mapping(target = "totalAmount", source = "req.paymentInfo.totalAmount")
   GetPaymentUrl.Request getPaymentUrlToDomain(
       AddOrderCommand.Request req, String orderId, String userId
   );
@@ -39,6 +25,7 @@ public interface OrderApplicationMapper {
       AddOrderCommand.Request req, String orderTransactionId
   );
 
+  @Mapping(target = "totalAmount", source = "req.paymentInfo.totalAmount")
   ValidateProductOrderInfo.Request validateProductOrderInfoToDomain(
       AddOrderCommand.Request req, String orderTransactionId
   );
