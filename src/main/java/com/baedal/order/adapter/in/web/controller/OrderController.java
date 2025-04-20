@@ -5,6 +5,7 @@ import com.baedal.order.adapter.in.web.dto.response.AddOrderResponse;
 import com.baedal.order.adapter.in.web.mapper.OrderWebMapper;
 import com.baedal.order.application.command.AddOrderCommand;
 import com.baedal.order.application.port.in.OrderUseCase;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ public class OrderController {
   private final OrderUseCase orderUseCase;
 
   @PostMapping("/")
-  public ResponseEntity<AddOrderResponse> addOrder(@RequestBody AddOrderRequest req) {
+  public ResponseEntity<AddOrderResponse> addOrder(@Valid @RequestBody AddOrderRequest req) {
     // note. 인증/인가 코드 작성 이후 변경 예정
     Long customerId = 1L;
     AddOrderCommand.Request commandRequest = mapper.addOrderToCommand(customerId, req);
