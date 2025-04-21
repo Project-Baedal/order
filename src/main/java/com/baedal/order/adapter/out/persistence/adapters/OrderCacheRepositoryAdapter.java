@@ -1,4 +1,4 @@
-package com.baedal.order.adapter.out.persistence.adapter;
+package com.baedal.order.adapter.out.persistence.adapters;
 
 import com.baedal.order.adapter.out.persistence.manager.OrderCacheCreator;
 import com.baedal.order.application.port.out.OrderCacheRepositoryPort;

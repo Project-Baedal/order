@@ -1,4 +1,4 @@
-package com.baedal.order.adapter.out.restApi.adapter;
+package com.baedal.order.adapter.out.restApi.adapters;
 
 import com.baedal.order.adapter.out.restApi.client.ProductServiceClient;
 import com.baedal.order.adapter.out.restApi.mapper.ProductApiMapper;

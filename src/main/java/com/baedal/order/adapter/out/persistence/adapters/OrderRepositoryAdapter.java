@@ -1,4 +1,4 @@
-package com.baedal.order.adapter.out.persistence.adapter;
+package com.baedal.order.adapter.out.persistence.adapters;
 
 import com.baedal.order.adapter.out.persistence.entity.OrderEntity;
 import com.baedal.order.adapter.out.persistence.manager.OrderCreator;
