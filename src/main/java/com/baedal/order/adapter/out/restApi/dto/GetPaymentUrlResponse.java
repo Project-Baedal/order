@@ -1,4 +1,4 @@
-package com.baedal.order.adapter.out.api.dto;
+package com.baedal.order.adapter.out.restApi.dto;
 
 import lombok.Builder;
 import lombok.Getter;

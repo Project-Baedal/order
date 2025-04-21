@@ -1,7 +1,7 @@
-package com.baedal.order.adapter.out.api.mapper;
+package com.baedal.order.adapter.out.restApi.mapper;
 
-import com.baedal.order.adapter.out.api.dto.GetPaymentUrlRequest;
-import com.baedal.order.adapter.out.api.dto.GetPaymentUrlResponse;
+import com.baedal.order.adapter.out.restApi.dto.GetPaymentUrlRequest;
+import com.baedal.order.adapter.out.restApi.dto.GetPaymentUrlResponse;
 import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import org.mapstruct.Mapper;
 

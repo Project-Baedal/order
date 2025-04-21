@@ -29,9 +29,9 @@ public class MessageSenderAdapter implements MessageSenderPort {
   public void validateStoreOrderInfo(ValidateStoreOrderInfo.Request req) {
     kafkaSender.sendMessage("cart.validateStoreOrderInfo", req.getOrderTransactionId(), req);
   }
-
-  @Override
-  public void sendOrderFinalCheck(String orderTransactionId) {
-    kafkaSender.sendMessage("order.finalCheck", orderTransactionId, orderTransactionId);
-  }
+//
+//  @Override
+//  public void sendOrderFinalCheck(String orderTransactionId) {
+//    kafkaSender.sendMessage("order.finalCheck", orderTransactionId, orderTransactionId);
+//  }
 }

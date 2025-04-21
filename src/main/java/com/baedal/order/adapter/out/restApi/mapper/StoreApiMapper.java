@@ -1,4 +1,4 @@
-package com.baedal.order.adapter.out.api.mapper;
+package com.baedal.order.adapter.out.restApi.mapper;
 
 import org.mapstruct.Mapper;
 

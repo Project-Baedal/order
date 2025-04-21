@@ -1,7 +1,7 @@
-package com.baedal.order.adapter.out.api.adapter;
+package com.baedal.order.adapter.out.restApi.adapter;
 
-import com.baedal.order.adapter.out.api.client.ProductServiceClient;
-import com.baedal.order.adapter.out.api.mapper.ProductApiMapper;
+import com.baedal.order.adapter.out.restApi.client.ProductServiceClient;
+import com.baedal.order.adapter.out.restApi.mapper.ProductApiMapper;
 import com.baedal.order.application.port.out.ProductClientPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

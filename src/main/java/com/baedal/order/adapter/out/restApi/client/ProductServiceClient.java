@@ -1,4 +1,4 @@
-package com.baedal.order.adapter.out.api.client;
+package com.baedal.order.adapter.out.restApi.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 

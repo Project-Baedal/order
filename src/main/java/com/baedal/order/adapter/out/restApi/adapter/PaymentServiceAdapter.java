@@ -1,9 +1,9 @@
-package com.baedal.order.adapter.out.api.adapter;
+package com.baedal.order.adapter.out.restApi.adapter;
 
-import com.baedal.order.adapter.out.api.client.PaymentServiceClient;
-import com.baedal.order.adapter.out.api.dto.GetPaymentUrlRequest;
-import com.baedal.order.adapter.out.api.dto.GetPaymentUrlResponse;
-import com.baedal.order.adapter.out.api.mapper.PaymentApiMapper;
+import com.baedal.order.adapter.out.restApi.client.PaymentServiceClient;
+import com.baedal.order.adapter.out.restApi.dto.GetPaymentUrlRequest;
+import com.baedal.order.adapter.out.restApi.dto.GetPaymentUrlResponse;
+import com.baedal.order.adapter.out.restApi.mapper.PaymentApiMapper;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import lombok.RequiredArgsConstructor;
