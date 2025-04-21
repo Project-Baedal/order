@@ -1,13 +1,10 @@
 package com.baedal.order.application.port.out;
 
-import com.baedal.order.application.command.AddOrderCommand;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
 
 public interface MessageSenderPort {
-
-  void sendPaymentRequest(Long orderId, AddOrderCommand.PaymentInfo req);
 
   void validateCartOrderInfo(ValidateCartOrderInfo.Request req);
 

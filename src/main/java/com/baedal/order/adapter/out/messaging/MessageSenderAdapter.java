@@ -16,11 +16,6 @@ public class MessageSenderAdapter implements MessageSenderPort {
   private final KafkaSender kafkaSender;
 
   @Override
-  public void sendPaymentRequest(Long orderId, PaymentInfo req) {
-    kafkaSender.sendMessage("payment.paymentRequest", orderId.toString(), req);
-  }
-
-  @Override
   public void validateCartOrderInfo(ValidateCartOrderInfo.Request req) {
     kafkaSender.sendMessage("cart.validateCartOrderInfo", req.getOrderTransactionId(), req);
   }
@@ -33,5 +28,10 @@ public class MessageSenderAdapter implements MessageSenderPort {
   @Override
   public void validateStoreOrderInfo(ValidateStoreOrderInfo.Request req) {
     kafkaSender.sendMessage("cart.validateStoreOrderInfo", req.getOrderTransactionId(), req);
+  }
+
+  @Override
+  public void sendOrderFinalCheck(String orderTransactionId) {
+    kafkaSender.sendMessage("order.finalCheck", orderTransactionId, orderTransactionId);
   }
 }

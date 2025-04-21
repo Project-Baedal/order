@@ -46,6 +46,9 @@ public class OrderService implements OrderUseCase {
     ValidateStoreOrderInfo.Request storeReq = mapper.validateStoreOrderInfoToDomain(req, orderTransactionId);
     messageSenderPort.validateStoreOrderInfo(storeReq);
 
+    // 주문 최종 확인
+    messageSenderPort.sendOrderFinalCheck(orderTransactionId);
+
     // 결제 요청 전송 및 결제 URL 반환
     GetPaymentUrl.Request paymentRequest = mapper.getPaymentUrlToDomain(
         req, orderTransactionId, userId
