@@ -9,13 +9,13 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class OrderRedisRepository {
 
-  private final RedisTemplate<String, String> redisTemplate;
+  private final RedisTemplate<String, Object> redisTemplate;
 
-  public void save(String key, String value) {
+  public void save(String key, Object value) {
     redisTemplate.opsForSet().add(key, value);
   }
 
-  public Set<String> getKeys(String key) {
+  public Set<Object> getKeys(String key) {
     return redisTemplate.opsForSet().members(key);
   }
 }

@@ -1,7 +1,7 @@
 package com.baedal.order.application.service;
 
 import com.baedal.order.application.command.AddOrderCommand;
-import com.baedal.order.application.command.OrderValidateCommand;
+import com.baedal.order.application.command.OrderValidateCommand.Request;
 import com.baedal.order.application.mapper.OrderApplicationMapper;
 import com.baedal.order.application.port.in.OrderUseCase;
 import com.baedal.order.application.port.out.MessageSenderPort;
@@ -9,7 +9,8 @@ import com.baedal.order.application.port.out.OrderCacheRepositoryPort;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
 import com.baedal.order.domain.business.OrderValidate;
-import com.baedal.order.domain.model.SuccessOrderValidate;
+import com.baedal.order.domain.model.AddOrderValidate;
+import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl.Response;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
@@ -78,22 +79,33 @@ public class OrderService implements OrderUseCase {
   }
 
   @Override
-  public void orderValidate(OrderValidateCommand.Request req) {
+  public void orderValidate(Request req) {
 
-    String domain = req.getDomain();
     String orderTransactionId = req.getOrderTransactionId();
 
     // 검증 결과 조회
-    Set<String> domains = orderCacheRepository.getOrderValidationStatus(orderTransactionId);
+    Set<ValidateResult> result = orderCacheRepository.getOrderValidationStatus(orderTransactionId);
 
-    // 모든 검증에 성공했을 경우 결제 승인 메세지 큐를 던짐
-    if (orderValidate.validate(domains, domain)) {
-      messageSenderPort.approvePayment(orderTransactionId);
+    // 전달 받은 요청을 검증 결과에 포함
+    ValidateResult tempResult = mapper.orderValidateResultToDomain(req);
+    result.add(tempResult);
+
+    // 크기가 기준에 미치지 못할 경우 검증 결과를 저장하고 종료
+    if (!orderValidate.validateCount(result)) {
+      AddOrderValidate addOrderValidateReq = mapper.addOrderValidateToDomain(req);
+      orderCacheRepository.addOrderValidate(addOrderValidateReq);
       return;
     }
 
-    // 검증 진행 중인 경우 검증 결과를 저장함
-    SuccessOrderValidate request = mapper.orderValidateToDomain(req);
-    orderCacheRepository.successOrderValidate(request);
+    // 실패한 검증이 있으면 주문 실패 메세지 전달하고 종료
+    String errorMessage = orderValidate.getErrorMessage(result);
+    if (errorMessage != null) {
+      messageSenderPort.failOrder(orderTransactionId, errorMessage);
+      return;
+    }
+
+    // 검증 성공시 결제 승인 메세지 전달
+    messageSenderPort.approvePayment(orderTransactionId);
+
   }
 }

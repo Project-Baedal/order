@@ -35,4 +35,9 @@ public class MessageSenderAdapter implements MessageSenderPort {
 
   }
 
+  @Override
+  public void failOrder(String orderTransactionId, String errorMessage) {
+    kafkaSender.sendMessage("payment.failOrder", orderTransactionId, errorMessage);
+  }
+
 }

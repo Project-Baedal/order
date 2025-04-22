@@ -1,11 +1,11 @@
-package com.baedal.order.adapter.in.message.dto;
+package com.baedal.order.domain.model;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class OrderValidateRequest {
+public class ValidateResult {
 
   private String domain;
   private boolean status;

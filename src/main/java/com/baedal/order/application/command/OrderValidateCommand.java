@@ -7,9 +7,11 @@ public class OrderValidateCommand {
 
   @Getter
   @Builder
-  public static class Request{
+  public static class Request {
     private String orderTransactionId;
     private String domain;
+    private boolean status;
+    private String message;
   }
 
 }

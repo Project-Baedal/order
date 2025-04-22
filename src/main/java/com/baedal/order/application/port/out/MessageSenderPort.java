@@ -13,4 +13,6 @@ public interface MessageSenderPort {
   void validateStoreOrderInfo(ValidateStoreOrderInfo.Request req);
 
   void approvePayment(String orderTransactionId);
+
+  void failOrder(String orderTransactionId, String errorMessage);
 }

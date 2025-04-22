@@ -2,7 +2,8 @@ package com.baedal.order.application.mapper;
 
 import com.baedal.order.application.command.AddOrderCommand;
 import com.baedal.order.application.command.OrderValidateCommand;
-import com.baedal.order.domain.model.SuccessOrderValidate;
+import com.baedal.order.domain.model.AddOrderValidate;
+import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
@@ -39,5 +40,6 @@ public interface OrderApplicationMapper {
   AddOrderCommand.Response getPaymentUrlToResponse(GetPaymentUrl.Response res);
 
   // 주문 검증
-  SuccessOrderValidate orderValidateToDomain(OrderValidateCommand.Request req);
+  ValidateResult orderValidateResultToDomain(OrderValidateCommand.Request req);
+  AddOrderValidate addOrderValidateToDomain(OrderValidateCommand.Request req);
 }

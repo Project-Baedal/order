@@ -1,5 +1,6 @@
 package com.baedal.order.adapter.out.persistence.manager;
 
+import com.baedal.order.adapter.out.persistence.dto.AddOrderValidateRequest;
 import com.baedal.order.adapter.out.persistence.repository.OrderRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ public class OrderCacheCreator {
 
   private final OrderRedisRepository orderRedisRepository;
 
-  public void saveOrderTransactionId(String orderTransactionId, String domain) {
-    orderRedisRepository.save("order:" + orderTransactionId, domain);
+  public void saveOrderTransactionId(String orderTransactionId, AddOrderValidateRequest dto) {
+    orderRedisRepository.save("order:" + orderTransactionId, dto);
   }
 }
