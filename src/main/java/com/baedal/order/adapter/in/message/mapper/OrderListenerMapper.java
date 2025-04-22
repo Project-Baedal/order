@@ -1,0 +1,14 @@
+package com.baedal.order.adapter.in.message.mapper;
+
+import com.baedal.order.adapter.in.message.dto.OrderValidateRequest;
+import com.baedal.order.application.command.OrderValidateCommand;
+import org.mapstruct.Mapper;
+
+@Mapper(componentModel = "spring")
+public interface OrderListenerMapper {
+
+  // 주문 검증
+  OrderValidateCommand.Request orderValidateToCommand(
+      Long orderTransactionId, OrderValidateRequest req
+  );
+}
