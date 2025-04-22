@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "payment", url = "${servers.payment.url}")
 public interface PaymentServiceClient {
 
-  @GetMapping("/")
+  @GetMapping("/pay")
   GetPaymentUrlResponse getPaymentUrl(GetPaymentUrlRequest req);
 
 }
