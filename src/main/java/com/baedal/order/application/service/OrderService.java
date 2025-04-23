@@ -97,15 +97,15 @@ public class OrderService implements OrderUseCase {
       return;
     }
 
-    // 실패한 검증이 있으면 주문 실패 메세지 전달하고 종료
-    String errorMessage = orderValidate.getErrorMessage(result);
-    if (errorMessage != null) {
-      messageSenderPort.failOrder(orderTransactionId, errorMessage);
-      return;
-    }
+    orderValidate.getErrorMessage(result).ifPresentOrElse(message -> {
+      // 실패한 검증이 있으면 주문 실패 메세지 전달하고 종료
+      messageSenderPort.failOrder(orderTransactionId, message);
 
-    // 검증 성공시 결제 승인 메세지 전달
-    messageSenderPort.approvePayment(orderTransactionId);
+    }, () -> {
+      // 검증 성공시 결제 승인 메세지 전달
+      messageSenderPort.approvePayment(orderTransactionId);
+    });
+
 
   }
 }

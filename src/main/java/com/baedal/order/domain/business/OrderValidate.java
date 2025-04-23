@@ -1,6 +1,7 @@
 package com.baedal.order.domain.business;
 
 import com.baedal.order.domain.model.ValidateResult;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +16,11 @@ public class OrderValidate {
     return domains.size() >= COUNT;
   }
 
-  public String getErrorMessage(Set<ValidateResult> results) {
+  public Optional<String> getErrorMessage(Set<ValidateResult> results) {
     return results.stream()
         .filter(result -> !result.isStatus())
         .map(ValidateResult::getMessage)
-        .findFirst()
-        .orElse(null);
+        .findFirst();
   }
 
 
