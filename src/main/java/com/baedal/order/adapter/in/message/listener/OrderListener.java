@@ -19,7 +19,7 @@ public class OrderListener {
   private final OrderUseCase orderUseCase;
 
 
-  @KafkaListener(topics = "order.orderValidationSuccess", groupId = "order-validate-group")
+  @KafkaListener(topics = "order.orderValidate", groupId = "order-validate-group")
   public void orderValidate(ConsumerRecord<String, String> record) {
     Long orderTransactionId = Long.parseLong(record.key());
     OrderValidateRequest req = converter.jsonToDto(record.value(), OrderValidateRequest.class);
