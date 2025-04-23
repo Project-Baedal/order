@@ -9,4 +9,6 @@ public interface OrderCacheRepositoryPort {
   void addOrderValidate(AddOrderValidate req);
 
   Set<ValidateResult> getOrderValidationStatus(String orderTransactionId);
+
+  void deleteKey(String orderTransactionId);
 }

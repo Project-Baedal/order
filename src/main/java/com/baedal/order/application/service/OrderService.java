@@ -104,6 +104,7 @@ public class OrderService implements OrderUseCase {
     }, () -> {
       // 검증 성공시 결제 승인 메세지 전달
       messageSenderPort.approvePayment(orderTransactionId);
+      orderCacheRepository.deleteKey(orderTransactionId);
     });
 
 

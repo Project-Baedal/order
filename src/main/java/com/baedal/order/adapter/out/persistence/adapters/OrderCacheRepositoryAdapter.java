@@ -2,6 +2,7 @@ package com.baedal.order.adapter.out.persistence.adapters;
 
 import com.baedal.order.adapter.out.persistence.dto.OrderValidateDto;
 import com.baedal.order.adapter.out.persistence.manager.OrderCacheCreator;
+import com.baedal.order.adapter.out.persistence.manager.OrderCacheDeleter;
 import com.baedal.order.adapter.out.persistence.manager.OrderCacheReader;
 import com.baedal.order.adapter.out.persistence.mapper.OrderPersistenceMapper;
 import com.baedal.order.application.port.out.OrderCacheRepositoryPort;
@@ -17,6 +18,7 @@ public class OrderCacheRepositoryAdapter implements OrderCacheRepositoryPort {
 
   private final OrderCacheCreator orderCacheCreator;
   private final OrderCacheReader orderCacheReader;
+  private final OrderCacheDeleter orderCacheDeleter;
   private final OrderPersistenceMapper orderMapper;
 
   @Override
@@ -31,6 +33,11 @@ public class OrderCacheRepositoryAdapter implements OrderCacheRepositoryPort {
         orderTransactionId
     );
     return orderMapper.getOrderValidateToDomain(response);
+  }
+
+  @Override
+  public void deleteKey(String orderTransactionId) {
+    orderCacheDeleter.deleteKey(orderTransactionId);
   }
 
 }

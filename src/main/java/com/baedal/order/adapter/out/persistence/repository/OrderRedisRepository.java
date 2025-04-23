@@ -24,4 +24,8 @@ public class OrderRedisRepository {
   public Set<Object> getKeys(String key) {
     return redisTemplate.opsForSet().members(getKey(key));
   }
+
+  public void deleteKey(String key) {
+    redisTemplate.delete(getKey(key));
+  }
 }
