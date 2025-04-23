@@ -9,6 +9,6 @@ public interface OrderListenerMapper {
 
   // 주문 검증
   OrderValidateCommand.Request orderValidateToCommand(
-      Long orderTransactionId, OrderValidateRequest req
+      String orderTransactionId, OrderValidateRequest req
   );
 }

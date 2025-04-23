@@ -21,7 +21,7 @@ public class OrderListener {
 
   @KafkaListener(topics = "order.orderValidate", groupId = "order-validate-group")
   public void orderValidate(ConsumerRecord<String, String> record) {
-    Long orderTransactionId = Long.parseLong(record.key());
+    String orderTransactionId = record.key();
     OrderValidateRequest req = converter.jsonToDto(record.value(), OrderValidateRequest.class);
     OrderValidateCommand.Request command = mapper.orderValidateToCommand(orderTransactionId, req);
     orderUseCase.orderValidate(command);
