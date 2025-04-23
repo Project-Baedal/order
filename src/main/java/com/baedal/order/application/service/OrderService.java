@@ -75,7 +75,7 @@ public class OrderService implements OrderUseCase {
     messageSenderPort.validateStoreOrderInfo(storeReq);
 
     GetPaymentUrl.Response paymentResponse = futureManager.extract(paymentFuture);
-    return mapper.getPaymentUrlToResponse(paymentResponse);
+    return mapper.getPaymentUrlToResponse(paymentResponse, orderTransactionId);
   }
 
   @Override

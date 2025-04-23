@@ -24,6 +24,7 @@ public class AddOrderCommand {
   public static class Response {
 
     private String tid;
+    private String orderTransactionId;
     private String nextRedirectAppUrl;
     private String nextRedirectMobileUrl;
     private String nextRedirectPcUrl;

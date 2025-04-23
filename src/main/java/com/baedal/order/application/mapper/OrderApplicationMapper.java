@@ -37,7 +37,9 @@ public interface OrderApplicationMapper {
       AddOrderCommand.Request req, String orderTransactionId
   );
 
-  AddOrderCommand.Response getPaymentUrlToResponse(GetPaymentUrl.Response res);
+  AddOrderCommand.Response getPaymentUrlToResponse(
+      GetPaymentUrl.Response res, String orderTransactionId
+  );
 
   // 주문 검증
   ValidateResult orderValidateResultToDomain(OrderValidateCommand.Request req);
