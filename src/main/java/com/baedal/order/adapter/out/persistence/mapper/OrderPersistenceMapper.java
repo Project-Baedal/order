@@ -1,7 +1,6 @@
 package com.baedal.order.adapter.out.persistence.mapper;
 
-import com.baedal.order.adapter.out.persistence.dto.AddOrderValidateRequest;
-import com.baedal.order.adapter.out.persistence.dto.GetOrderValidateResponse;
+import com.baedal.order.adapter.out.persistence.dto.OrderValidateDto;
 import com.baedal.order.adapter.out.persistence.entity.OrderEntity;
 import com.baedal.order.adapter.out.persistence.entity.ProductEntity;
 import com.baedal.order.domain.model.AddOrder;
@@ -27,8 +26,8 @@ public interface OrderPersistenceMapper {
   Order toDomain(OrderEntity entity);
 
   // 검증 추가
-  AddOrderValidateRequest addOrderValidateToDto(AddOrderValidate req);
+  OrderValidateDto addOrderValidateToDto(AddOrderValidate req);
 
   // 검증 조회
-  Set<ValidateResult> getOrderValidateToDomain(Set<GetOrderValidateResponse> res);
+  Set<ValidateResult> getOrderValidateToDomain(Set<OrderValidateDto> res);
 }

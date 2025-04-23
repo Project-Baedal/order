@@ -1,6 +1,6 @@
 package com.baedal.order.adapter.out.persistence.manager;
 
-import com.baedal.order.adapter.out.persistence.dto.GetOrderValidateResponse;
+import com.baedal.order.adapter.out.persistence.dto.OrderValidateDto;
 import com.baedal.order.adapter.out.persistence.repository.OrderRedisRepository;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,9 +13,10 @@ public class OrderCacheReader {
 
   private final OrderRedisRepository orderRedisRepository;
 
-  public Set<GetOrderValidateResponse> findByOrderTransactionId(String orderTransactionId) {
-    return orderRedisRepository.getKeys(orderTransactionId).stream()
-        .map(obj -> (GetOrderValidateResponse) obj)
+  public Set<OrderValidateDto> findByOrderTransactionId(String orderTransactionId) {
+    Set<Object> set = orderRedisRepository.getKeys(orderTransactionId);
+    return set.stream()
+        .map(obj -> (OrderValidateDto) obj)
         .collect(Collectors.toSet());
   }
 }

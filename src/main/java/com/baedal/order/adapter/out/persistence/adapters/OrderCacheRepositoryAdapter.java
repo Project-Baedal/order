@@ -1,7 +1,6 @@
 package com.baedal.order.adapter.out.persistence.adapters;
 
-import com.baedal.order.adapter.out.persistence.dto.AddOrderValidateRequest;
-import com.baedal.order.adapter.out.persistence.dto.GetOrderValidateResponse;
+import com.baedal.order.adapter.out.persistence.dto.OrderValidateDto;
 import com.baedal.order.adapter.out.persistence.manager.OrderCacheCreator;
 import com.baedal.order.adapter.out.persistence.manager.OrderCacheReader;
 import com.baedal.order.adapter.out.persistence.mapper.OrderPersistenceMapper;
@@ -22,13 +21,13 @@ public class OrderCacheRepositoryAdapter implements OrderCacheRepositoryPort {
 
   @Override
   public void addOrderValidate(AddOrderValidate req) {
-    AddOrderValidateRequest dto = orderMapper.addOrderValidateToDto(req);
+    OrderValidateDto dto = orderMapper.addOrderValidateToDto(req);
     orderCacheCreator.saveOrderTransactionId(req.getOrderTransactionId(), dto);
   }
 
   @Override
   public Set<ValidateResult> getOrderValidationStatus(String orderTransactionId) {
-    Set<GetOrderValidateResponse> response = orderCacheReader.findByOrderTransactionId(
+    Set<OrderValidateDto> response = orderCacheReader.findByOrderTransactionId(
         orderTransactionId
     );
     return orderMapper.getOrderValidateToDomain(response);
