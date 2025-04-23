@@ -13,7 +13,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 @Configuration
-public class KafkaConfig {
+public class KafkaProducerConfig {
 
   @Value("${spring.kafka.producer.bootstrap-servers}")
   private String bootstrapServers;
@@ -37,3 +37,4 @@ public class KafkaConfig {
     return configProps;
   }
 }
+
