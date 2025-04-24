@@ -5,7 +5,8 @@ import com.baedal.order.application.command.OrderValidateCommand.Request;
 import com.baedal.order.application.mapper.OrderApplicationMapper;
 import com.baedal.order.application.port.in.OrderUseCase;
 import com.baedal.order.application.port.out.MessageSenderPort;
-import com.baedal.order.application.port.out.OrderCacheRepositoryPort;
+import com.baedal.order.application.port.out.OrderTempCacheRepositoryPort;
+import com.baedal.order.application.port.out.OrderValidateCacheRepositoryPort;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
 import com.baedal.order.domain.business.OrderValidate;
@@ -34,7 +35,6 @@ public class OrderService implements OrderUseCase {
 
   private final OrderApplicationMapper mapper;
   private final OrderValidateCacheRepositoryPort orderValidateCacheRepositoryPort;
-
   private final OrderTempCacheRepositoryPort orderTempCacheRepositoryPort;
   private final MessageSenderPort messageSenderPort;
   private final PaymentClientPort paymentClientPort;
@@ -53,6 +53,9 @@ public class OrderService implements OrderUseCase {
 
     // 상태 추적을 위한 고유값(UUID) 생성
     String orderTransactionId = UUID.randomUUID().toString();
+
+    // 주문 정보 임시 저장
+    orderTempCacheRepositoryPort.saveTempOrder(orderTransactionId, req);
 
     // 결제 요청 전송 및 결제 URL 반환
     Future<Response> paymentFuture = executorService.submit(() -> {
@@ -86,7 +89,6 @@ public class OrderService implements OrderUseCase {
     String orderTransactionId = req.getOrderTransactionId();
 
     // 검증 결과 조회
-    Set<ValidateResult> result = orderCacheRepository.getOrderValidationStatus(orderTransactionId);
     Set<ValidateResult> result = orderValidateCacheRepositoryPort.getOrderValidationStatus(
         orderTransactionId
     );
