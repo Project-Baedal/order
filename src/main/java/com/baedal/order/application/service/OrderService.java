@@ -33,7 +33,9 @@ public class OrderService implements OrderUseCase {
   private final FutureManager futureManager = new FutureManager();
 
   private final OrderApplicationMapper mapper;
-  private final OrderCacheRepositoryPort orderCacheRepository;
+  private final OrderValidateCacheRepositoryPort orderValidateCacheRepositoryPort;
+
+  private final OrderTempCacheRepositoryPort orderTempCacheRepositoryPort;
   private final MessageSenderPort messageSenderPort;
   private final PaymentClientPort paymentClientPort;
   private final OrderValidate orderValidate;
@@ -85,6 +87,9 @@ public class OrderService implements OrderUseCase {
 
     // 검증 결과 조회
     Set<ValidateResult> result = orderCacheRepository.getOrderValidationStatus(orderTransactionId);
+    Set<ValidateResult> result = orderValidateCacheRepositoryPort.getOrderValidationStatus(
+        orderTransactionId
+    );
 
     // 전달 받은 요청을 검증 결과에 포함
     ValidateResult tempResult = mapper.orderValidateResultToDomain(req);
@@ -93,7 +98,7 @@ public class OrderService implements OrderUseCase {
     // 크기가 기준에 미치지 못할 경우 검증 결과를 저장하고 종료
     if (!orderValidate.validateCount(result)) {
       AddOrderValidate addOrderValidateReq = mapper.addOrderValidateToDomain(req);
-      orderCacheRepository.addOrderValidate(addOrderValidateReq);
+      orderValidateCacheRepositoryPort.addOrderValidate(addOrderValidateReq);
       return;
     }
 
@@ -104,7 +109,7 @@ public class OrderService implements OrderUseCase {
     }, () -> {
       // 검증 성공시 결제 승인 메세지 전달
       messageSenderPort.approvePayment(orderTransactionId);
-      orderCacheRepository.deleteKey(orderTransactionId);
+      orderValidateCacheRepositoryPort.deleteKey(orderTransactionId);
     });
 
 
