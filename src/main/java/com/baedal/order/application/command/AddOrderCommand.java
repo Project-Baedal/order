@@ -12,11 +12,19 @@ public class AddOrderCommand {
 
     private Long customerId;
     private Long storeId;
-    private List<Long> productIds;
+    private List<ProductInfo> productIds;
     private String deliveryAddress;
     private String phoneNumber;
     private PaymentInfo paymentInfo;
     private int deliveryAmount;
+  }
+
+  @Getter
+  @Builder
+  public static class ProductInfo {
+    private Long productId;
+    private String productName;
+    private int price;
   }
 
   @Getter

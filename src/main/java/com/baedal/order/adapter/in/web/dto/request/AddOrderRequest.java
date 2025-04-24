@@ -18,7 +18,7 @@ public class AddOrderRequest {
 
   @Schema(description = "상품 ID")
   @NotNull
-  private List<Long> productIds;
+  private List<ProductInfoRequest> productIds;
 
   @Schema(description = "배달 주소")
   @NotBlank

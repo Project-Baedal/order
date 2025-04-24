@@ -28,7 +28,6 @@ public interface OrderApplicationMapper {
       AddOrderCommand.Request req, String orderTransactionId
   );
 
-  @Mapping(target = "totalAmount", source = "req.paymentInfo.totalAmount")
   ValidateProductOrderInfo.Request validateProductOrderInfoToDomain(
       AddOrderCommand.Request req, String orderTransactionId
   );

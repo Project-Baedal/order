@@ -12,7 +12,15 @@ public class ValidateCartOrderInfo {
     private String orderTransactionId;
     private Long customerId;
     private Long storeId;
-    private List<Long> productIds;
+    private List<ProductInfo> productIds;
+  }
+
+  @Getter
+  @Builder
+  public static class ProductInfo {
+    private Long productId;
+    private String productName;
+    private int price;
   }
 
 }
