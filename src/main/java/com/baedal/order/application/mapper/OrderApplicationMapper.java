@@ -8,6 +8,7 @@ import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -29,7 +30,9 @@ public interface OrderApplicationMapper {
   );
 
   ValidateProductOrderInfo.Request validateProductOrderInfoToDomain(
-      AddOrderCommand.Request req, String orderTransactionId
+      List<AddOrderCommand.ProductInfo> productInfo,
+      String orderTransactionId,
+      Long storeId
   );
 
   ValidateStoreOrderInfo.Request validateStoreOrderInfoToDomain(

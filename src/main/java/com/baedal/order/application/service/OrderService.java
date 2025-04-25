@@ -70,8 +70,11 @@ public class OrderService implements OrderUseCase {
     messageSenderPort.validateCartOrderInfo(cartReq);
 
     // 상품이 판매 중인지 상태 확인
-    ValidateProductOrderInfo.Request productReq = mapper.validateProductOrderInfoToDomain(req,
-        orderTransactionId);
+    ValidateProductOrderInfo.Request productReq = mapper.validateProductOrderInfoToDomain(
+        req.getProductInfo(),
+        orderTransactionId,
+        req.getStoreId()
+    );
     messageSenderPort.validateProductOrderInfo(productReq);
 
     // 매장이 영업 중인지 상태 확인

@@ -12,7 +12,7 @@ public class AddOrderCommand {
 
     private Long customerId;
     private Long storeId;
-    private List<ProductInfo> productIds;
+    private List<ProductInfo> productInfo;
     private String deliveryAddress;
     private String phoneNumber;
     private PaymentInfo paymentInfo;
