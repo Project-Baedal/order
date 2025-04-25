@@ -9,18 +9,10 @@ public class ValidateCartOrderInfo {
   @Getter
   @Builder
   public static class Request {
-    private String orderTransactionId;
     private Long customerId;
+    private String orderTransactionId;
     private Long storeId;
-    private List<ProductInfo> productIds;
-  }
-
-  @Getter
-  @Builder
-  public static class ProductInfo {
-    private Long productId;
-    private String productName;
-    private int price;
+    private List<Long> productIds;
   }
 
 }
