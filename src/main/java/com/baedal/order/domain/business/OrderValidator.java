@@ -6,7 +6,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderValidate {
+public class OrderValidator {
 
   // 검증 해야 하는 도메인 갯수
   private final int COUNT = 4;

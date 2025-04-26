@@ -9,7 +9,7 @@ import com.baedal.order.application.port.out.OrderTempCacheRepositoryPort;
 import com.baedal.order.application.port.out.OrderValidateCacheRepositoryPort;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
-import com.baedal.order.domain.business.OrderValidate;
+import com.baedal.order.domain.business.OrderValidator;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
@@ -38,7 +38,7 @@ public class OrderService implements OrderUseCase {
   private final OrderTempCacheRepositoryPort orderTempCacheRepositoryPort;
   private final MessageSenderPort messageSenderPort;
   private final PaymentClientPort paymentClientPort;
-  private final OrderValidate orderValidate;
+  private final OrderValidator orderValidator;
 
   /**
    * 응답 값을 받아오는 요청에만 버츄얼 스레드 적용
@@ -104,13 +104,13 @@ public class OrderService implements OrderUseCase {
     result.add(tempResult);
 
     // 크기가 기준에 미치지 못할 경우 검증 결과를 저장하고 종료
-    if (!orderValidate.validateCount(result)) {
+    if (!orderValidator.validateCount(result)) {
       AddOrderValidate addOrderValidateReq = mapper.addOrderValidateToDomain(req);
       orderValidateCacheRepositoryPort.addOrderValidate(addOrderValidateReq);
       return;
     }
 
-    orderValidate.getErrorMessage(result).ifPresentOrElse(message -> {
+    orderValidator.getErrorMessage(result).ifPresentOrElse(message -> {
       // 실패한 검증이 있으면 주문 실패 메세지 전달하고 종료
       messageSenderPort.failOrder(orderTransactionId, message);
 
