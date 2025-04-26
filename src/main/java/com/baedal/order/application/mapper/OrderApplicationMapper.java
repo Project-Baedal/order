@@ -1,6 +1,7 @@
 package com.baedal.order.application.mapper;
 
 import com.baedal.order.application.command.AddOrderCommand;
+import com.baedal.order.application.command.AddOrderCommand.ProductInfo;
 import com.baedal.order.application.command.OrderValidateCommand;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.ValidateResult;
@@ -25,9 +26,14 @@ public interface OrderApplicationMapper {
       AddOrderCommand.Request req, String orderId, String userId
   );
 
+  @Mapping(target = "productIds", expression = "java(getProductId(productInfo))")
   ValidateCartOrderInfo.Request validateCartOrderInfoToDomain(
-      AddOrderCommand.Request req, String orderTransactionId
+      String orderTransactionId, Long customerId, List<ProductInfo> productInfo, Long storeId
   );
+
+  default List<Long> getProductId(List<ProductInfo> productInfo) {
+    return productInfo.stream().map(ProductInfo::getProductId).toList();
+  };
 
   ValidateProductOrderInfo.Request validateProductOrderInfoToDomain(
       List<AddOrderCommand.ProductInfo> productInfo,

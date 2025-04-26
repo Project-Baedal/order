@@ -49,7 +49,7 @@ public class OrderService implements OrderUseCase {
 
     // note. 수정 예정
     // 회원ID
-    String userId = "1";
+    Long customerId = 1L;
 
     // 상태 추적을 위한 고유값(UUID) 생성
     String orderTransactionId = UUID.randomUUID().toString();
@@ -59,21 +59,24 @@ public class OrderService implements OrderUseCase {
 
     // 결제 요청 전송 및 결제 URL 반환
     Future<Response> paymentFuture = executorService.submit(() -> {
-      GetPaymentUrl.Request paymentRequest = mapper.getPaymentUrlToDomain(req, orderTransactionId,
-          userId);
+      GetPaymentUrl.Request paymentRequest = mapper.getPaymentUrlToDomain(
+          req, orderTransactionId, customerId.toString()
+      );
       return paymentClientPort.getPaymentUrl(paymentRequest);
     });
 
     // 전달 받은 장바구니 값과 저장된 장바구니의 값이 동일한지 확인
-    ValidateCartOrderInfo.Request cartReq = mapper.validateCartOrderInfoToDomain(req,
-        orderTransactionId);
+    ValidateCartOrderInfo.Request cartReq = mapper.validateCartOrderInfoToDomain(
+        orderTransactionId,
+        customerId,
+        req.getProductInfo(),
+        req.getStoreId()
+        );
     messageSenderPort.validateCartOrderInfo(cartReq);
 
     // 상품이 판매 중인지 상태 확인
     ValidateProductOrderInfo.Request productReq = mapper.validateProductOrderInfoToDomain(
-        req.getProductInfo(),
-        orderTransactionId,
-        req.getStoreId()
+        req.getProductInfo(), orderTransactionId, req.getStoreId()
     );
     messageSenderPort.validateProductOrderInfo(productReq);
 
