@@ -1,16 +1,27 @@
 package com.baedal.order.adapter.out.persistence.repository;
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
 public class OrderRedisRepository {
 
-  private final HashOperations<String, String, String> hashOps;
+  private final RedisTemplate<String, Object> redisTemplate;
 
-  public void save(String key, String field, String value) {
-    hashOps.put(key, field, value);
+  private String ORDER_PREFIX = "order:";
+
+  private String getKey(String key) {
+    return ORDER_PREFIX + key;
+  }
+
+  public void save(String key, Object value) {
+    redisTemplate.opsForSet().add(getKey(key), value);
+  }
+
+  public Set<Object> getKeys(String key) {
+    return redisTemplate.opsForSet().members(getKey(key));
   }
 }

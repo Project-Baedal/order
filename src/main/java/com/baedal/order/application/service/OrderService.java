@@ -1,17 +1,23 @@
 package com.baedal.order.application.service;
 
 import com.baedal.order.application.command.AddOrderCommand;
+import com.baedal.order.application.command.OrderValidateCommand.Request;
 import com.baedal.order.application.mapper.OrderApplicationMapper;
 import com.baedal.order.application.port.in.OrderUseCase;
 import com.baedal.order.application.port.out.MessageSenderPort;
 import com.baedal.order.application.port.out.OrderCacheRepositoryPort;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
+import com.baedal.order.domain.business.OrderValidate;
+import com.baedal.order.domain.model.AddOrderValidate;
+import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl.Response;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -30,6 +36,7 @@ public class OrderService implements OrderUseCase {
   private final OrderCacheRepositoryPort orderCacheRepository;
   private final MessageSenderPort messageSenderPort;
   private final PaymentClientPort paymentClientPort;
+  private final OrderValidate orderValidate;
 
   /**
    * 응답 값을 받아오는 요청에만 버츄얼 스레드 적용
@@ -42,8 +49,8 @@ public class OrderService implements OrderUseCase {
     // 회원ID
     String userId = "1";
 
-    // 상태 추적을 위한 고유값(UUID) 생성 및 캐시 저장
-    String orderTransactionId = orderCacheRepository.generateAndSaveOrderTransactionId();
+    // 상태 추적을 위한 고유값(UUID) 생성
+    String orderTransactionId = UUID.randomUUID().toString();
 
     // 결제 요청 전송 및 결제 URL 반환
     Future<Response> paymentFuture = executorService.submit(() -> {
@@ -69,5 +76,36 @@ public class OrderService implements OrderUseCase {
 
     GetPaymentUrl.Response paymentResponse = futureManager.extract(paymentFuture);
     return mapper.getPaymentUrlToResponse(paymentResponse);
+  }
+
+  @Override
+  public void orderValidate(Request req) {
+
+    String orderTransactionId = req.getOrderTransactionId();
+
+    // 검증 결과 조회
+    Set<ValidateResult> result = orderCacheRepository.getOrderValidationStatus(orderTransactionId);
+
+    // 전달 받은 요청을 검증 결과에 포함
+    ValidateResult tempResult = mapper.orderValidateResultToDomain(req);
+    result.add(tempResult);
+
+    // 크기가 기준에 미치지 못할 경우 검증 결과를 저장하고 종료
+    if (!orderValidate.validateCount(result)) {
+      AddOrderValidate addOrderValidateReq = mapper.addOrderValidateToDomain(req);
+      orderCacheRepository.addOrderValidate(addOrderValidateReq);
+      return;
+    }
+
+    orderValidate.getErrorMessage(result).ifPresentOrElse(message -> {
+      // 실패한 검증이 있으면 주문 실패 메세지 전달하고 종료
+      messageSenderPort.failOrder(orderTransactionId, message);
+
+    }, () -> {
+      // 검증 성공시 결제 승인 메세지 전달
+      messageSenderPort.approvePayment(orderTransactionId);
+    });
+
+
   }
 }
