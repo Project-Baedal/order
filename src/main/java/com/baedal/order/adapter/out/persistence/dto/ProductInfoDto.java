@@ -5,10 +5,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class GetOrderValidateResponse {
-
-  private String domain;
-  private boolean status;
-  private String message;
-
+public class ProductInfoDto {
+  private Long productId;
+  private String productName;
+  private int price;
 }

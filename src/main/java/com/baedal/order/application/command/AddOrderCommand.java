@@ -12,7 +12,7 @@ public class AddOrderCommand {
 
     private Long customerId;
     private Long storeId;
-    private List<Long> productIds;
+    private List<ProductInfo> productInfo;
     private String deliveryAddress;
     private String phoneNumber;
     private PaymentInfo paymentInfo;
@@ -21,9 +21,18 @@ public class AddOrderCommand {
 
   @Getter
   @Builder
+  public static class ProductInfo {
+    private Long productId;
+    private String productName;
+    private int price;
+  }
+
+  @Getter
+  @Builder
   public static class Response {
 
     private String tid;
+    private String orderTransactionId;
     private String nextRedirectAppUrl;
     private String nextRedirectMobileUrl;
     private String nextRedirectPcUrl;

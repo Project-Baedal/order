@@ -4,9 +4,11 @@ import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.ValidateResult;
 import java.util.Set;
 
-public interface OrderCacheRepositoryPort {
+public interface OrderValidateCacheRepositoryPort {
 
   void addOrderValidate(AddOrderValidate req);
 
   Set<ValidateResult> getOrderValidationStatus(String orderTransactionId);
+
+  void deleteKey(String orderTransactionId);
 }

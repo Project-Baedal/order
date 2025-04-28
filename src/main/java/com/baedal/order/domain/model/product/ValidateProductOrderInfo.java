@@ -11,8 +11,15 @@ public class ValidateProductOrderInfo {
   public static class Request {
     private String orderTransactionId;
     private Long storeId;
-    private List<Long> productIds;
-    private int totalAmount;
+    private List<ProductInfo> productInfo;
+  }
+
+  @Getter
+  @Builder
+  public static class ProductInfo {
+      private Long productId;
+    private String productName;
+    private int price;
   }
 
 }

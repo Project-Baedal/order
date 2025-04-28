@@ -5,10 +5,11 @@ import com.baedal.order.application.command.OrderValidateCommand.Request;
 import com.baedal.order.application.mapper.OrderApplicationMapper;
 import com.baedal.order.application.port.in.OrderUseCase;
 import com.baedal.order.application.port.out.MessageSenderPort;
-import com.baedal.order.application.port.out.OrderCacheRepositoryPort;
+import com.baedal.order.application.port.out.OrderTempCacheRepositoryPort;
+import com.baedal.order.application.port.out.OrderValidateCacheRepositoryPort;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
-import com.baedal.order.domain.business.OrderValidate;
+import com.baedal.order.domain.business.OrderValidator;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
@@ -33,10 +34,11 @@ public class OrderService implements OrderUseCase {
   private final FutureManager futureManager = new FutureManager();
 
   private final OrderApplicationMapper mapper;
-  private final OrderCacheRepositoryPort orderCacheRepository;
+  private final OrderValidateCacheRepositoryPort orderValidateCacheRepositoryPort;
+  private final OrderTempCacheRepositoryPort orderTempCacheRepositoryPort;
   private final MessageSenderPort messageSenderPort;
   private final PaymentClientPort paymentClientPort;
-  private final OrderValidate orderValidate;
+  private final OrderValidator orderValidator;
 
   /**
    * 응답 값을 받아오는 요청에만 버츄얼 스레드 적용
@@ -47,26 +49,35 @@ public class OrderService implements OrderUseCase {
 
     // note. 수정 예정
     // 회원ID
-    String userId = "1";
+    Long customerId = 1L;
 
     // 상태 추적을 위한 고유값(UUID) 생성
     String orderTransactionId = UUID.randomUUID().toString();
 
+    // 주문 정보 임시 저장
+    orderTempCacheRepositoryPort.saveTempOrder(orderTransactionId, req);
+
     // 결제 요청 전송 및 결제 URL 반환
     Future<Response> paymentFuture = executorService.submit(() -> {
-      GetPaymentUrl.Request paymentRequest = mapper.getPaymentUrlToDomain(req, orderTransactionId,
-          userId);
+      GetPaymentUrl.Request paymentRequest = mapper.getPaymentUrlToDomain(
+          req, orderTransactionId, customerId.toString()
+      );
       return paymentClientPort.getPaymentUrl(paymentRequest);
     });
 
     // 전달 받은 장바구니 값과 저장된 장바구니의 값이 동일한지 확인
-    ValidateCartOrderInfo.Request cartReq = mapper.validateCartOrderInfoToDomain(req,
-        orderTransactionId);
+    ValidateCartOrderInfo.Request cartReq = mapper.validateCartOrderInfoToDomain(
+        orderTransactionId,
+        customerId,
+        req.getProductInfo(),
+        req.getStoreId()
+        );
     messageSenderPort.validateCartOrderInfo(cartReq);
 
     // 상품이 판매 중인지 상태 확인
-    ValidateProductOrderInfo.Request productReq = mapper.validateProductOrderInfoToDomain(req,
-        orderTransactionId);
+    ValidateProductOrderInfo.Request productReq = mapper.validateProductOrderInfoToDomain(
+        req.getProductInfo(), orderTransactionId, req.getStoreId()
+    );
     messageSenderPort.validateProductOrderInfo(productReq);
 
     // 매장이 영업 중인지 상태 확인
@@ -75,7 +86,7 @@ public class OrderService implements OrderUseCase {
     messageSenderPort.validateStoreOrderInfo(storeReq);
 
     GetPaymentUrl.Response paymentResponse = futureManager.extract(paymentFuture);
-    return mapper.getPaymentUrlToResponse(paymentResponse);
+    return mapper.getPaymentUrlToResponse(paymentResponse, orderTransactionId);
   }
 
   @Override
@@ -84,26 +95,29 @@ public class OrderService implements OrderUseCase {
     String orderTransactionId = req.getOrderTransactionId();
 
     // 검증 결과 조회
-    Set<ValidateResult> result = orderCacheRepository.getOrderValidationStatus(orderTransactionId);
+    Set<ValidateResult> result = orderValidateCacheRepositoryPort.getOrderValidationStatus(
+        orderTransactionId
+    );
 
     // 전달 받은 요청을 검증 결과에 포함
     ValidateResult tempResult = mapper.orderValidateResultToDomain(req);
     result.add(tempResult);
 
     // 크기가 기준에 미치지 못할 경우 검증 결과를 저장하고 종료
-    if (!orderValidate.validateCount(result)) {
+    if (!orderValidator.validateCount(result)) {
       AddOrderValidate addOrderValidateReq = mapper.addOrderValidateToDomain(req);
-      orderCacheRepository.addOrderValidate(addOrderValidateReq);
+      orderValidateCacheRepositoryPort.addOrderValidate(addOrderValidateReq);
       return;
     }
 
-    orderValidate.getErrorMessage(result).ifPresentOrElse(message -> {
+    orderValidator.getErrorMessage(result).ifPresentOrElse(message -> {
       // 실패한 검증이 있으면 주문 실패 메세지 전달하고 종료
       messageSenderPort.failOrder(orderTransactionId, message);
 
     }, () -> {
       // 검증 성공시 결제 승인 메세지 전달
       messageSenderPort.approvePayment(orderTransactionId);
+      orderValidateCacheRepositoryPort.deleteKey(orderTransactionId);
     });
 
 

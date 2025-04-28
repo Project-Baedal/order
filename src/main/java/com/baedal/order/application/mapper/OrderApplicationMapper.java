@@ -1,6 +1,7 @@
 package com.baedal.order.application.mapper;
 
 import com.baedal.order.application.command.AddOrderCommand;
+import com.baedal.order.application.command.AddOrderCommand.ProductInfo;
 import com.baedal.order.application.command.OrderValidateCommand;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.ValidateResult;
@@ -8,6 +9,7 @@ import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -24,20 +26,28 @@ public interface OrderApplicationMapper {
       AddOrderCommand.Request req, String orderId, String userId
   );
 
+  @Mapping(target = "productIds", expression = "java(getProductId(productInfo))")
   ValidateCartOrderInfo.Request validateCartOrderInfoToDomain(
-      AddOrderCommand.Request req, String orderTransactionId
+      String orderTransactionId, Long customerId, List<ProductInfo> productInfo, Long storeId
   );
 
-  @Mapping(target = "totalAmount", source = "req.paymentInfo.totalAmount")
+  default List<Long> getProductId(List<ProductInfo> productInfo) {
+    return productInfo.stream().map(ProductInfo::getProductId).toList();
+  };
+
   ValidateProductOrderInfo.Request validateProductOrderInfoToDomain(
-      AddOrderCommand.Request req, String orderTransactionId
+      List<AddOrderCommand.ProductInfo> productInfo,
+      String orderTransactionId,
+      Long storeId
   );
 
   ValidateStoreOrderInfo.Request validateStoreOrderInfoToDomain(
       AddOrderCommand.Request req, String orderTransactionId
   );
 
-  AddOrderCommand.Response getPaymentUrlToResponse(GetPaymentUrl.Response res);
+  AddOrderCommand.Response getPaymentUrlToResponse(
+      GetPaymentUrl.Response res, String orderTransactionId
+  );
 
   // 주문 검증
   ValidateResult orderValidateResultToDomain(OrderValidateCommand.Request req);

@@ -5,10 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class OrderValidateDto {
-
-  private String domain;
-  private boolean status;
-  private String message;
-
+public class PaymentInfoDto {
+  private String paymentMethod;
+  private int totalAmount;
 }

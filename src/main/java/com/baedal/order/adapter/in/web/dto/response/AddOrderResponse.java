@@ -8,6 +8,9 @@ import lombok.Getter;
 @Builder
 public class AddOrderResponse {
 
+  @Schema(description = "주문 ID")
+  private String orderTransactionId;
+
   @Schema(description = "결제 고유 번호")
   private String tid;
 

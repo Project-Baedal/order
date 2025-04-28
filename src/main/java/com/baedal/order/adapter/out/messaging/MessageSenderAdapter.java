@@ -21,12 +21,12 @@ public class MessageSenderAdapter implements MessageSenderPort {
 
   @Override
   public void validateProductOrderInfo(ValidateProductOrderInfo.Request req) {
-    kafkaSender.sendMessage("cart.validateProductOrderInfo", req.getOrderTransactionId(),req);
+    kafkaSender.sendMessage("product.validateProductOrderInfo", req.getOrderTransactionId(),req);
   }
 
   @Override
   public void validateStoreOrderInfo(ValidateStoreOrderInfo.Request req) {
-    kafkaSender.sendMessage("cart.validateStoreOrderInfo", req.getOrderTransactionId(), req);
+    kafkaSender.sendMessage("store.validateStoreOrderInfo", req.getOrderTransactionId(), req);
   }
 
   @Override
