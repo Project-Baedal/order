@@ -4,9 +4,9 @@ spring:
 
 
   datasource:
-    url: jdbc:postgresql://order-postgresql:5432/order
-    username: order
-    password: order
+    url: jdbc:postgresql://baedal:5432/baedal-order
+    username: baedal
+    password: baedal
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -24,7 +24,7 @@ spring:
       bootstrap-servers: baedal-kafka:9092
   data:
     redis:
-      host: order-redis
+      host: baedal-redis
       port: 6379
 
 
