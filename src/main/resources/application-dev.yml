@@ -1,0 +1,33 @@
+spring:
+  config:
+    import: optional:application-secret.yml
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  kafka:
+    consumer:
+      bootstrap-servers: baedal-kafka:9092
+    producer:
+      bootstrap-servers: baedal-kafka:9092
+  data:
+    redis:
+      host: order-redis
+      port: 6379
+
+
+servers:
+  store:
+    url: http://store/api/store/
+  product:
+    url: http://product/api/product/
+  cart:
+    url: http://cart/api/cart/
+  payment:
+    url: http://payment/api/payment/
+
