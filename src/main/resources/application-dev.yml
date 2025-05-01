@@ -1,0 +1,40 @@
+spring:
+  config:
+    import: optional:application-secret.yml
+
+
+  datasource:
+    url: jdbc:postgresql://baedal:5432/baedal-order
+    username: baedal
+    password: baedal
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  kafka:
+    consumer:
+      bootstrap-servers: baedal-kafka:9092
+    producer:
+      bootstrap-servers: baedal-kafka:9092
+  data:
+    redis:
+      host: baedal-redis
+      port: 6379
+
+
+servers:
+  store:
+    url: http://store/api/store/
+  product:
+    url: http://product/api/product/
+  cart:
+    url: http://cart/api/cart/
+  payment:
+    url: http://payment/api/payment/
+
