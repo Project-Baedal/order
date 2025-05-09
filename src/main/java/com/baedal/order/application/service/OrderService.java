@@ -5,18 +5,20 @@ import com.baedal.order.application.command.OrderValidateCommand.Request;
 import com.baedal.order.application.mapper.OrderApplicationMapper;
 import com.baedal.order.application.port.in.OrderUseCase;
 import com.baedal.order.application.port.out.MessageSenderPort;
+import com.baedal.order.application.port.out.OrderRepositoryPort;
 import com.baedal.order.application.port.out.OrderTempCacheRepositoryPort;
 import com.baedal.order.application.port.out.OrderValidateCacheRepositoryPort;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
 import com.baedal.order.domain.business.OrderValidator;
 import com.baedal.order.domain.model.AddOrderValidate;
+import com.baedal.order.domain.model.OrderStatus;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
+import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import com.baedal.order.domain.model.payment.GetPaymentUrl.Response;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
-import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -39,6 +41,7 @@ public class OrderService implements OrderUseCase {
   private final MessageSenderPort messageSenderPort;
   private final PaymentClientPort paymentClientPort;
   private final OrderValidator orderValidator;
+  private final OrderRepositoryPort orderPort;
 
   /**
    * 응답 값을 받아오는 요청에만 버츄얼 스레드 적용
@@ -71,7 +74,7 @@ public class OrderService implements OrderUseCase {
         customerId,
         req.getProductInfo(),
         req.getStoreId()
-        );
+    );
     messageSenderPort.validateCartOrderInfo(cartReq);
 
     // 상품이 판매 중인지 상태 확인
@@ -121,5 +124,10 @@ public class OrderService implements OrderUseCase {
     });
 
 
+  }
+
+  @Transactional
+  public void changeOrderStatus(Long orderId, OrderStatus status) {
+    orderPort.changeOrderStatus(orderId, status);
   }
 }

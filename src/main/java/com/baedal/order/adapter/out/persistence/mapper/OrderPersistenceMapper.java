@@ -4,11 +4,13 @@ import com.baedal.order.adapter.out.persistence.dto.OrderValidateDto;
 import com.baedal.order.adapter.out.persistence.dto.SaveTempOrderDto;
 import com.baedal.order.adapter.out.persistence.entity.OrderEntity;
 import com.baedal.order.adapter.out.persistence.entity.ProductEntity;
+import com.baedal.order.adapter.out.persistence.enums.OrderEntityStatus;
 import com.baedal.order.application.command.AddOrderCommand;
 import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.AddOrderProduct;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.Order;
+import com.baedal.order.domain.model.OrderStatus;
 import com.baedal.order.domain.model.ValidateResult;
 import java.util.Set;
 import org.mapstruct.Mapper;
@@ -35,4 +37,6 @@ public interface OrderPersistenceMapper {
 
   // 주문 임시 저장
   SaveTempOrderDto saveTempOrderToDto(AddOrderCommand.Request req);
+
+  OrderEntityStatus mapStatusEnum(OrderStatus status);
 }

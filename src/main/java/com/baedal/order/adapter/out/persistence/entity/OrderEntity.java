@@ -1,9 +1,12 @@
 package com.baedal.order.adapter.out.persistence.entity;
 
 import com.baedal.order.adapter.out.persistence.enums.OrderEntityStatus;
+import com.baedal.order.domain.model.OrderStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -51,6 +54,7 @@ public class OrderEntity {
   @Column(nullable = false)
   private int totalAmount;
 
+  @Enumerated(EnumType.ORDINAL)
   @Column(nullable = false)
   private OrderEntityStatus orderStatus;
 
@@ -70,5 +74,9 @@ public class OrderEntity {
     this.totalAmount = totalAmount;
     this.orderStatus = orderStatus;
     this.createdAt = createdAt;
+  }
+
+  public void changeOrderStaus(OrderEntityStatus status) {
+    this.orderStatus = status;
   }
 }

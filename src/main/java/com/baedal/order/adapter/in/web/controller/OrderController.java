@@ -4,18 +4,22 @@ import com.baedal.order.adapter.in.web.dto.request.AddOrderRequest;
 import com.baedal.order.adapter.in.web.dto.response.AddOrderResponse;
 import com.baedal.order.adapter.in.web.dto.response.GetOrderResponse;
 import com.baedal.order.adapter.in.web.mapper.OrderWebMapper;
+import com.baedal.order.adapter.out.persistence.enums.OrderEntityStatus;
 import com.baedal.order.application.command.AddOrderCommand;
 import com.baedal.order.application.port.in.OrderUseCase;
 import com.baedal.order.application.service.OrderQueryService;
 import com.baedal.order.domain.model.Order;
+import com.baedal.order.domain.model.OrderStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -44,5 +48,13 @@ public class OrderController {
     Order order = orderQueryService.findOrderByOrderId(orderId);
     GetOrderResponse response = mapper.getOrderToResponse(order);
     return ResponseEntity.ok(response);
+  }
+
+  @PatchMapping("/{orderId}")
+  public ResponseEntity<Void> changeOrderStatus(
+      @PathVariable Long orderId,
+      @RequestParam(name = "status") OrderStatus status) {
+    orderUseCase.changeOrderStatus(orderId, status);
+    return ResponseEntity.noContent().build();
   }
 }
