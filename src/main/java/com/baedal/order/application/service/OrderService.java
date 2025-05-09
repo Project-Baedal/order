@@ -18,6 +18,7 @@ import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import com.baedal.order.domain.model.payment.GetPaymentUrl.Response;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
+import com.baedal.order.domain.model.rider.AddRiderQueueRequest;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
 import java.util.Set;
 import java.util.UUID;
@@ -122,8 +123,6 @@ public class OrderService implements OrderUseCase {
       messageSenderPort.approvePayment(orderTransactionId);
       orderValidateCacheRepositoryPort.deleteKey(orderTransactionId);
     });
-
-
   }
 
   @Transactional
@@ -131,7 +130,8 @@ public class OrderService implements OrderUseCase {
     if (status.equals(OrderStatus.DENIED)) { // 주문 거절
       // TODO: 주문 환불
     } else if (status.equals(OrderStatus.ACCEPTED)) { // 주문 승인
-      // TODO: 배달 대기열에 등록
+      AddRiderQueueRequest req = mapper.addRiderQueueRequest(orderId);
+      messageSenderPort.orderAccepted_addRiderQueue(orderId, req);
     }
     orderPort.changeOrderStatus(orderId, status);
   }
