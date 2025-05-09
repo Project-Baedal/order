@@ -128,6 +128,11 @@ public class OrderService implements OrderUseCase {
 
   @Transactional
   public void changeOrderStatus(Long orderId, OrderStatus status) {
+    if (status.equals(OrderStatus.DENIED)) { // 주문 거절
+      // TODO: 주문 환불
+    } else if (status.equals(OrderStatus.ACCEPTED)) { // 주문 승인
+      // TODO: 배달 대기열에 등록
+    }
     orderPort.changeOrderStatus(orderId, status);
   }
 }
