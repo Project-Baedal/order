@@ -37,9 +37,8 @@ public class SecurityConfig {
         .addFilterBefore(new AuthFilter(), UsernamePasswordAuthenticationFilter.class)
 
         .authorizeHttpRequests((auth) -> auth
-            .anyRequest().hasRole("CUSTOMER")
+            .anyRequest().authenticated()
         )
         .build();
   }
-
 }
