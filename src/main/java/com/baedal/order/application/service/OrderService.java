@@ -126,13 +126,16 @@ public class OrderService implements OrderUseCase {
   }
 
   @Transactional
-  public void changeOrderStatus(Long orderId, OrderStatus status) {
-    if (status.equals(OrderStatus.DENIED)) { // 주문 거절
-      // TODO: 주문 환불
-    } else if (status.equals(OrderStatus.ACCEPTED)) { // 주문 승인
-      AddRiderQueueRequest req = mapper.addRiderQueueRequest(orderId);
-      messageSenderPort.orderAccepted_addRiderQueue(orderId, req);
-    }
-    orderPort.changeOrderStatus(orderId, status);
+  public void confirmOrder(Long orderId) {
+    AddRiderQueueRequest req = mapper.addRiderQueueRequest(orderId);
+    messageSenderPort.orderAccepted_addRiderQueue(orderId, req);
+
+    orderPort.changeOrderStatus(orderId, OrderStatus.ACCEPTED);
+  }
+
+  @Transactional
+  public void cancelOrder(Long orderId) {
+    // TODO: 주문 환불
+    orderPort.changeOrderStatus(orderId, OrderStatus.DENIED);
   }
 }
