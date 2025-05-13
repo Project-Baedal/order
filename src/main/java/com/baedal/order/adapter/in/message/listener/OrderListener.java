@@ -29,13 +29,13 @@ public class OrderListener {
 
   @KafkaListener(topics = "order.accept", groupId = "order-accept-group")
   public void acceptOrder(ConsumerRecord<String, String> record) {
-    long orderId = Long.parseLong(record.key());
-    orderUseCase.confirmOrder(orderId);
+    String orderTransactionId = record.key();
+    orderUseCase.confirmOrder(orderTransactionId);
   }
 
   @KafkaListener(topics = "order.deny", groupId = "order-deny-group")
   public void denyOrder(ConsumerRecord<String, String> record) {
-    long orderId = Long.parseLong(record.key());
-    orderUseCase.cancelOrder(orderId);
+    String orderTransactionId = record.key();
+    orderUseCase.cancelOrder(orderTransactionId);
   }
 }

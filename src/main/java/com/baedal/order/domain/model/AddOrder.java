@@ -9,6 +9,7 @@ import lombok.Getter;
 public class AddOrder {
 
   private final Long storeId;
+  private final Long customerId;
   private final String deliveryAddress;
   private final String phoneNumber;
   private final String paymentMethod;
@@ -20,10 +21,11 @@ public class AddOrder {
 
 
   @Builder
-  public AddOrder(Long storeId, String deliveryAddress, String phoneNumber,
+  public AddOrder(Long storeId, Long customerId, String deliveryAddress, String phoneNumber,
       String paymentMethod, int deliveryAmount, int totalAmount,
       List<AddOrderProduct> products) {
     this.storeId = storeId;
+    this.customerId = customerId;
     this.deliveryAddress = deliveryAddress;
     this.phoneNumber = phoneNumber;
     this.paymentMethod = paymentMethod;

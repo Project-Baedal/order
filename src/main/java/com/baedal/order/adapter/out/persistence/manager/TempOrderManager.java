@@ -17,9 +17,13 @@ public class TempOrderManager {
     return PREFIX + key;
   }
 
-
   public void saveTempOrder(String orderTransactionId, SaveTempOrderDto dto) {
     String key = getKey(orderTransactionId);
     orderRedisRepository.save(key, dto);
+  }
+
+  public SaveTempOrderDto getTempOrder(String orderTransactionId) {
+    Object object = orderRedisRepository.get(getKey(orderTransactionId));
+    return (SaveTempOrderDto) object;
   }
 }

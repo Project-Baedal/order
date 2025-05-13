@@ -11,8 +11,11 @@ import com.baedal.order.application.port.out.OrderValidateCacheRepositoryPort;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
 import com.baedal.order.domain.business.OrderValidator;
+import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.AddOrderValidate;
+import com.baedal.order.domain.model.Order;
 import com.baedal.order.domain.model.OrderStatus;
+import com.baedal.order.domain.model.TempOrder;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl;
@@ -126,16 +129,27 @@ public class OrderService implements OrderUseCase {
   }
 
   @Transactional
-  public void confirmOrder(Long orderId) {
+  public void confirmOrder(String transactionId) {
+    // Get TempOrder and map to AddOrder
+    TempOrder tempOrder = orderTempCacheRepositoryPort.getTempOrder(transactionId);
+    AddOrder addOrder = mapper.tempToDomain(tempOrder);
+
+    // Save Order Entity
+    Order save = orderPort.save(addOrder);
+    Long orderId = save.getOrderId();
+
+    // Change Order Status ACCEPTED
+    orderPort.changeOrderStatus(orderId, OrderStatus.ACCEPTED);
+
+    // Send addRiderQueueRequest to rider queue
     AddRiderQueueRequest req = mapper.addRiderQueueRequest(orderId);
     messageSenderPort.orderAccepted_addRiderQueue(orderId, req);
-
-    orderPort.changeOrderStatus(orderId, OrderStatus.ACCEPTED);
   }
 
   @Transactional
-  public void cancelOrder(Long orderId) {
+  public void cancelOrder(String transactionId) {
     // TODO: 주문 환불
-    orderPort.changeOrderStatus(orderId, OrderStatus.DENIED);
+    TempOrder tempOrder = orderTempCacheRepositoryPort.getTempOrder(transactionId);
+//    orderPort.changeOrderStatus(orderId, OrderStatus.DENIED);
   }
 }
