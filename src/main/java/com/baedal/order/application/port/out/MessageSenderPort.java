@@ -15,4 +15,6 @@ public interface MessageSenderPort {
   void approvePayment(String orderTransactionId);
 
   void failOrder(String orderTransactionId, String errorMessage);
+
+  void cancelPayment(Long paymentId);
 }

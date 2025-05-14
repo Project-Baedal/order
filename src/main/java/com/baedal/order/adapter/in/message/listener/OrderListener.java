@@ -27,4 +27,12 @@ public class OrderListener {
     orderUseCase.orderValidate(command);
   }
 
+
+  @KafkaListener(topics = "order.orderCancel", groupId = "order-cancel-group")
+  public void orderCancel(ConsumerRecord<String, String> record) {
+    Long orderId = Long.valueOf(record.key());
+    orderUseCase.orderCancel(orderId);
+  }
+
+
 }

@@ -40,4 +40,9 @@ public class MessageSenderAdapter implements MessageSenderPort {
     kafkaSender.sendMessage("payment.failOrder", orderTransactionId, errorMessage);
   }
 
+  @Override
+  public void cancelPayment(Long paymentId) {
+    kafkaSender.sendMessage("payment.cancelPayment", paymentId.toString(), paymentId);
+  }
+
 }

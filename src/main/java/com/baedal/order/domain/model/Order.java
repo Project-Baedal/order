@@ -21,4 +21,7 @@ public class Order {
   private OrderStatus orderStatus;
   private LocalDateTime orderDate;
 
+  public void updatedOrderStatus(OrderStatus orderStatus) {
+    this.orderStatus = orderStatus;
+  }
 }

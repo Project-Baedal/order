@@ -5,4 +5,8 @@ import com.baedal.order.domain.model.Order;
 
 public interface OrderRepositoryPort {
   Order save(AddOrder addOrder);
+
+  Order findById(Long id);
+
+  void cancelOrderById(Order order);
 }

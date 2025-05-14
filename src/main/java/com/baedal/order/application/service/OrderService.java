@@ -5,12 +5,14 @@ import com.baedal.order.application.command.OrderValidateCommand.Request;
 import com.baedal.order.application.mapper.OrderApplicationMapper;
 import com.baedal.order.application.port.in.OrderUseCase;
 import com.baedal.order.application.port.out.MessageSenderPort;
+import com.baedal.order.application.port.out.OrderRepositoryPort;
 import com.baedal.order.application.port.out.OrderTempCacheRepositoryPort;
 import com.baedal.order.application.port.out.OrderValidateCacheRepositoryPort;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
 import com.baedal.order.domain.business.OrderValidator;
 import com.baedal.order.domain.model.AddOrderValidate;
+import com.baedal.order.domain.model.Order;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl.Response;
@@ -39,6 +41,7 @@ public class OrderService implements OrderUseCase {
   private final MessageSenderPort messageSenderPort;
   private final PaymentClientPort paymentClientPort;
   private final OrderValidator orderValidator;
+  private final OrderRepositoryPort orderRepository;
 
   /**
    * 응답 값을 받아오는 요청에만 버츄얼 스레드 적용
@@ -120,6 +123,23 @@ public class OrderService implements OrderUseCase {
       orderValidateCacheRepositoryPort.deleteKey(orderTransactionId);
     });
 
+
+  }
+
+  @Override
+  @Transactional
+  public void orderCancel(Long orderId) {
+    // 주문이 존재하는지 조회
+    Order order = orderRepository.findById(orderId);
+
+    // 주문 상태 검증
+    orderValidator.validateSucceededStatus(order);
+
+    // 주문의 상태를 변경
+    orderRepository.cancelOrderById(order);
+
+    // 환불 요청
+    messageSenderPort.cancelPayment(order.getPaymentId());
 
   }
 }
