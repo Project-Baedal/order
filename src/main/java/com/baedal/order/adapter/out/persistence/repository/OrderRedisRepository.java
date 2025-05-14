@@ -16,6 +16,10 @@ public class OrderRedisRepository {
     redisTemplate.opsForSet().add(key, value);
   }
 
+  public Object get(String key) {
+    return redisTemplate.opsForSet().pop(key);
+  }
+
   public Set<Object> getKeys(String key) {
     return redisTemplate.opsForSet().members(key);
   }

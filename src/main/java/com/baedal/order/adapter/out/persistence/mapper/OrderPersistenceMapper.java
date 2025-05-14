@@ -11,6 +11,7 @@ import com.baedal.order.domain.model.AddOrderProduct;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.Order;
 import com.baedal.order.domain.model.OrderStatus;
+import com.baedal.order.domain.model.TempOrder;
 import com.baedal.order.domain.model.ValidateResult;
 import java.util.Set;
 import org.mapstruct.Mapper;
@@ -39,4 +40,6 @@ public interface OrderPersistenceMapper {
   SaveTempOrderDto saveTempOrderToDto(AddOrderCommand.Request req);
 
   OrderEntityStatus mapStatusEnum(OrderStatus status);
+
+  TempOrder toDomain(SaveTempOrderDto dto);
 }

@@ -43,6 +43,7 @@ public class MessageSenderAdapter implements MessageSenderPort {
 
   @Override
   public void orderAccepted_addRiderQueue(Long orderId, AddRiderQueueRequest req) {
+    // FIXME: rider or delivery domain 에서 받을 지 정하고 수정해야 함
     kafkaSender.sendMessage("rider.addRiderQueue", orderId.toString(), req);
   }
 }
