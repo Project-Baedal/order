@@ -3,9 +3,7 @@ package com.baedal.order.application.mapper;
 import com.baedal.order.application.command.AddOrderCommand;
 import com.baedal.order.application.command.AddOrderCommand.ProductInfo;
 import com.baedal.order.application.command.OrderValidateCommand;
-import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.AddOrderValidate;
-import com.baedal.order.domain.model.TempOrder;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl;
@@ -36,7 +34,9 @@ public interface OrderApplicationMapper {
 
   default List<Long> getProductId(List<ProductInfo> productInfo) {
     return productInfo.stream().map(ProductInfo::getProductId).toList();
-  };
+  }
+
+  ;
 
   ValidateProductOrderInfo.Request validateProductOrderInfoToDomain(
       List<AddOrderCommand.ProductInfo> productInfo,
@@ -51,8 +51,6 @@ public interface OrderApplicationMapper {
   AddOrderCommand.Response getPaymentUrlToResponse(
       GetPaymentUrl.Response res, String orderTransactionId
   );
-
-  AddOrder tempToDomain(TempOrder temp);
 
   // 주문 검증
   ValidateResult orderValidateResultToDomain(OrderValidateCommand.Request req);
