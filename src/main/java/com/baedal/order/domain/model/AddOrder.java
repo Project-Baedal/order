@@ -9,26 +9,23 @@ import lombok.Getter;
 public class AddOrder {
 
   private final Long storeId;
+  private final Long paymentId;
   private final String deliveryAddress;
   private final String phoneNumber;
-  private final String paymentMethod;
-  private final int deliveryAmount;
-  private final int totalAmount;
   private final String orderStatus;
   private final LocalDateTime orderDate;
   private final List<AddOrderProduct> products;
 
 
   @Builder
-  public AddOrder(Long storeId, String deliveryAddress, String phoneNumber,
-      String paymentMethod, int deliveryAmount, int totalAmount,
-      List<AddOrderProduct> products) {
+  public AddOrder(
+      Long storeId, Long paymentId, String deliveryAddress, String phoneNumber,
+      List<AddOrderProduct> products
+  ) {
     this.storeId = storeId;
+    this.paymentId = paymentId;
     this.deliveryAddress = deliveryAddress;
     this.phoneNumber = phoneNumber;
-    this.paymentMethod = paymentMethod;
-    this.deliveryAmount = deliveryAmount;
-    this.totalAmount = totalAmount;
     this.orderStatus = OrderStatus.PENDING.toString();
     this.orderDate = LocalDateTime.now();
     this.products = products;

@@ -10,13 +10,11 @@ import lombok.Getter;
 public class Order {
 
   private Long orderId;
+  private Long paymentId;
   private Long storeId;
   private List<AddOrderProduct> productInfo;
   private String deliveryAddress;
   private String phoneNumber;
-  private String paymentMethod;
-  private int totalAmount;
-  private int deliveryAmount;
   private String orderStatus;
   private LocalDateTime orderDate;
 
