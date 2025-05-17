@@ -1,16 +1,21 @@
 package com.baedal.order.application.service;
 
 import com.baedal.order.application.command.AddOrderCommand;
+import com.baedal.order.application.command.OrderSuccessCommand;
 import com.baedal.order.application.command.OrderValidateCommand.Request;
+import com.baedal.order.application.command.store.RequestStoreOrderCommand;
 import com.baedal.order.application.mapper.OrderApplicationMapper;
 import com.baedal.order.application.port.in.OrderUseCase;
 import com.baedal.order.application.port.out.MessageSenderPort;
+import com.baedal.order.application.port.out.OrderRepositoryPort;
 import com.baedal.order.application.port.out.OrderTempCacheRepositoryPort;
 import com.baedal.order.application.port.out.OrderValidateCacheRepositoryPort;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
 import com.baedal.order.domain.business.OrderValidator;
+import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.AddOrderValidate;
+import com.baedal.order.domain.model.TempOrder;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl.Response;
@@ -39,6 +44,7 @@ public class OrderService implements OrderUseCase {
   private final MessageSenderPort messageSenderPort;
   private final PaymentClientPort paymentClientPort;
   private final OrderValidator orderValidator;
+  private final OrderRepositoryPort orderRepositoryPort;
 
   /**
    * 응답 값을 받아오는 요청에만 버츄얼 스레드 적용
@@ -121,5 +127,22 @@ public class OrderService implements OrderUseCase {
     });
 
 
+  }
+
+  @Override
+  public void orderSuccess(OrderSuccessCommand.Request req) {
+
+    // 임시 주문 조회
+    TempOrder tempOrder = orderTempCacheRepositoryPort.findByTransactionId(
+        req.getOrderTransactionId()
+    );
+
+    // 주문 저장
+    AddOrder order = mapper.tempOrderToDomain(tempOrder);
+    orderRepositoryPort.save(order);
+
+    // 매장 주문 요청 메세지 큐 전달
+    RequestStoreOrderCommand.Request storeRequest = mapper.addOrderToDomain(order);
+    messageSenderPort.requestStoreOrder(storeRequest);
   }
 }

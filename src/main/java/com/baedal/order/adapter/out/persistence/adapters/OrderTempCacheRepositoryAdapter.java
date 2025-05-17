@@ -5,6 +5,7 @@ import com.baedal.order.adapter.out.persistence.manager.TempOrderManager;
 import com.baedal.order.adapter.out.persistence.mapper.OrderPersistenceMapper;
 import com.baedal.order.application.command.AddOrderCommand;
 import com.baedal.order.application.port.out.OrderTempCacheRepositoryPort;
+import com.baedal.order.domain.model.TempOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,12 @@ public class OrderTempCacheRepositoryAdapter implements OrderTempCacheRepository
   public void saveTempOrder(String orderTransactionId, AddOrderCommand.Request req) {
     SaveTempOrderDto dto = orderMapper.saveTempOrderToDto(req);
     tempOrderManager.saveTempOrder(orderTransactionId, dto);
+  }
+
+  @Override
+  public TempOrder findByTransactionId(String transactionId) {
+    SaveTempOrderDto dto = tempOrderManager.getTempOrder(transactionId);
+    return orderMapper.saveTempOrderToTempOrder(dto);
   }
 
 }

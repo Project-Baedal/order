@@ -1,6 +1,8 @@
 package com.baedal.order.adapter.in.message.mapper;
 
+import com.baedal.order.adapter.in.message.dto.OrderSuccessRequest;
 import com.baedal.order.adapter.in.message.dto.OrderValidateRequest;
+import com.baedal.order.application.command.OrderSuccessCommand;
 import com.baedal.order.application.command.OrderValidateCommand;
 import org.mapstruct.Mapper;
 
@@ -11,4 +13,7 @@ public interface OrderListenerMapper {
   OrderValidateCommand.Request orderValidateToCommand(
       String orderTransactionId, OrderValidateRequest req
   );
+
+  // 주문 성공
+  OrderSuccessCommand.Request orderSuccessToCommand(OrderSuccessRequest req);
 }

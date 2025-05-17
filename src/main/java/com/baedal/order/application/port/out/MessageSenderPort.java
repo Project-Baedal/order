@@ -1,5 +1,6 @@
 package com.baedal.order.application.port.out;
 
+import com.baedal.order.application.command.store.RequestStoreOrderCommand;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
@@ -15,4 +16,6 @@ public interface MessageSenderPort {
   void approvePayment(String orderTransactionId);
 
   void failOrder(String orderTransactionId, String errorMessage);
+
+  void requestStoreOrder(RequestStoreOrderCommand.Request req);
 }
