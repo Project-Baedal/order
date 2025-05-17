@@ -24,6 +24,12 @@ public class TempOrderManager {
 
   public SaveTempOrderDto getTempOrder(String orderTransactionId) {
     Object object = orderRedisRepository.get(getKey(orderTransactionId));
+    if (object == null) {
+      return null;
+    }
+    if (!(object instanceof SaveTempOrderDto)) {
+      throw new RuntimeException("Failed to cast object to SaveTempOrderDto.");
+    }
     return (SaveTempOrderDto) object;
   }
 }
