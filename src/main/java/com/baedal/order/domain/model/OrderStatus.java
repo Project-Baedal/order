@@ -1,5 +1,9 @@
 package com.baedal.order.domain.model;
 
 public enum OrderStatus {
-  PENDING
+  PENDING,
+  COMPLETED,
+  ACCEPTED,
+  DENIED,
+  CANCELED,
 }
