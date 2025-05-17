@@ -21,7 +21,7 @@ public class ValidateOrderManager {
 
   public void saveOrderTransactionId(String orderTransactionId, OrderValidateDto dto) {
     String key = getKey(orderTransactionId);
-    orderRedisRepository.save(key, dto);
+    orderRedisRepository.saveSet(key, dto);
   }
 
   public Set<OrderValidateDto> findByOrderTransactionId(String orderTransactionId) {
