@@ -26,7 +26,7 @@ public class OrderValidator {
   }
 
   public void validateSucceededStatus(Order order) {
-    if (order.getOrderStatus() != OrderStatus.SUCCEEDED) {
+    if (order.getOrderStatus() != OrderStatus.COMPLETED) {
       throw new RuntimeException("주문 상태가 일치하지 않습니다.");
     }
   }

@@ -42,7 +42,7 @@ public class OrderRepositoryAdapter implements OrderRepositoryPort {
 
   @Override
   public void cancelOrderById(Order order) {
-    order.updatedOrderStatus(OrderStatus.CANCELLED);
+    order.updatedOrderStatus(OrderStatus.CANCELED);
     OrderEntity entity = orderMapper.toEntity(order);
     orderCreator.save(entity);
   }
