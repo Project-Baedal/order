@@ -9,12 +9,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OrderReader {
 
-  private final OrderJpaRepository orderJpaRepository;
+  private final OrderJpaRepository repository;
 
   public OrderEntity findById(Long id) {
-    return orderJpaRepository.findById(id).orElseThrow(() ->
-        new RuntimeException("해당 ID 값을 가진 데이터가 존재하지 않거나 접근 권한이 없습니다.")
-    );
-
+    return repository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Failed to find OrderEntity by id."));
   }
 }

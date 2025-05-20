@@ -17,8 +17,10 @@ import org.springframework.stereotype.Component;
 public class OrderRepositoryAdapter implements OrderRepositoryPort {
 
   private final OrderPersistenceMapper orderMapper;
+
   private final OrderCreator orderCreator;
-  private final OrderReader orderReader;
+
+  private final OrderReader reader;
 
   @Override
   public Order save(AddOrder addOrder) {
@@ -29,21 +31,14 @@ public class OrderRepositoryAdapter implements OrderRepositoryPort {
 
   @Override
   public Order findById(Long id) {
-    OrderEntity entity = orderReader.findById(id);
+    OrderEntity entity = reader.findById(id);
     return orderMapper.toDomain(entity);
   }
 
   @Override
   public void changeOrderStatus(Long orderId, OrderStatus status) {
-    OrderEntity entity = orderReader.findById(orderId);
+    OrderEntity entity = reader.findById(orderId);
     OrderEntityStatus orderEntityStatus = orderMapper.mapStatusEnum(status);
     entity.changeOrderStaus(orderEntityStatus);
-  }
-
-  @Override
-  public void cancelOrderById(Order order) {
-    order.updatedOrderStatus(OrderStatus.CANCELED);
-    OrderEntity entity = orderMapper.toEntity(order);
-    orderCreator.save(entity);
   }
 }

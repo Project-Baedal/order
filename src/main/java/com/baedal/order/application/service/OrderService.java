@@ -12,7 +12,6 @@ import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
 import com.baedal.order.domain.business.OrderValidator;
 import com.baedal.order.domain.model.AddOrderValidate;
-import com.baedal.order.domain.model.Order;
 import com.baedal.order.domain.model.OrderStatus;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
@@ -43,7 +42,7 @@ public class OrderService implements OrderUseCase {
   private final MessageSenderPort messageSenderPort;
   private final PaymentClientPort paymentClientPort;
   private final OrderValidator orderValidator;
-  private final OrderRepositoryPort orderRepository;
+  private final OrderRepositoryPort orderPort;
 
   /**
    * 응답 값을 받아오는 요청에만 버츄얼 스레드 적용
@@ -131,29 +130,12 @@ public class OrderService implements OrderUseCase {
     AddRiderQueueRequest req = mapper.addRiderQueueRequest(orderId);
     messageSenderPort.orderAccepted_addRiderQueue(orderId, req);
 
-    orderRepository.changeOrderStatus(orderId, OrderStatus.ACCEPTED);
+    orderPort.changeOrderStatus(orderId, OrderStatus.ACCEPTED);
   }
 
   @Transactional
   public void cancelOrder(Long orderId) {
     // TODO: 주문 환불
-    orderRepository.changeOrderStatus(orderId, OrderStatus.DENIED);
-  }
-
-  @Override
-  @Transactional
-  public void orderCancel(Long orderId) {
-    // 주문이 존재하는지 조회
-    Order order = orderRepository.findById(orderId);
-
-    // 주문 상태 검증
-    orderValidator.validateSucceededStatus(order);
-
-    // 주문의 상태를 변경
-    orderRepository.cancelOrderById(order);
-
-    // 환불 요청
-    messageSenderPort.cancelPayment(order.getPaymentId());
-
+    orderPort.changeOrderStatus(orderId, OrderStatus.DENIED);
   }
 }

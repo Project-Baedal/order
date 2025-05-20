@@ -18,6 +18,4 @@ public interface MessageSenderPort {
   void failOrder(String orderTransactionId, String errorMessage);
 
   void orderAccepted_addRiderQueue(Long orderId, AddRiderQueueRequest req);
-
-  void cancelPayment(Long paymentId);
 }

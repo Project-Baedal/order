@@ -46,9 +46,4 @@ public class MessageSenderAdapter implements MessageSenderPort {
     // FIXME: rider or delivery domain 에서 받을 지 정하고 수정해야 함
     kafkaSender.sendMessage("rider.addRiderQueue", orderId.toString(), req);
   }
-  @Override
-  public void cancelPayment(Long paymentId) {
-    kafkaSender.sendMessage("payment.cancelPayment", paymentId.toString(), paymentId);
-  }
-
 }

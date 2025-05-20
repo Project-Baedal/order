@@ -37,9 +37,6 @@ public class OrderEntity {
   @Column(nullable = false)
   private Long customerId;
 
-  @Column(nullable = false)
-  private Long paymentId;
-
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "order_id")
   private List<ProductEntity> products;
@@ -67,11 +64,10 @@ public class OrderEntity {
   private LocalDateTime createdAt;
 
   @Builder
-  public OrderEntity(Long storeId, Long paymentId, Long customerId, List<ProductEntity> products,
+  public OrderEntity(Long storeId, Long customerId, List<ProductEntity> products,
       String deliveryAddress, String phoneNumber, String paymentMethod, int deliveryAmount,
       int totalAmount, OrderEntityStatus orderStatus, LocalDateTime createdAt) {
     this.storeId = storeId;
-    this.paymentId = paymentId;
     this.customerId = customerId;
     this.products = products;
     this.deliveryAddress = deliveryAddress;

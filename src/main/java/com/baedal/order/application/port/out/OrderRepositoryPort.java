@@ -10,6 +10,4 @@ public interface OrderRepositoryPort {
   Order findById(Long id);
 
   void changeOrderStatus(Long orderId, OrderStatus status);
-
-  void cancelOrderById(Order order);
 }
