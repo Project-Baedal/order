@@ -1,5 +1,7 @@
 package com.baedal.order.domain.business;
 
+import com.baedal.order.domain.model.Order;
+import com.baedal.order.domain.model.OrderStatus;
 import com.baedal.order.domain.model.ValidateResult;
 import java.util.Optional;
 import java.util.Set;
@@ -21,6 +23,12 @@ public class OrderValidator {
         .filter(result -> !result.isStatus())
         .map(ValidateResult::getMessage)
         .findFirst();
+  }
+
+  public void validateSucceededStatus(Order order) {
+    if (order.getOrderStatus() != OrderStatus.COMPLETED) {
+      throw new RuntimeException("주문 상태가 일치하지 않습니다.");
+    }
   }
 
 

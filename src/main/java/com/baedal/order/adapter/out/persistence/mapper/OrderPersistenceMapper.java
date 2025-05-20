@@ -20,6 +20,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface OrderPersistenceMapper {
 
+  OrderEntity toEntity(Order order);
+
   @Mapping(target = "createdAt", source = "orderDate")
   OrderEntity toEntity(AddOrder addOrder);
 

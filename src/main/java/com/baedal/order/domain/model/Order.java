@@ -11,13 +11,17 @@ public class Order {
 
   private Long orderId;
   private Long storeId;
+  private Long paymentId;
   private List<AddOrderProduct> productInfo;
   private String deliveryAddress;
   private String phoneNumber;
   private String paymentMethod;
   private int totalAmount;
   private int deliveryAmount;
-  private String orderStatus;
+  private OrderStatus orderStatus;
   private LocalDateTime orderDate;
 
+  public void updatedOrderStatus(OrderStatus orderStatus) {
+    this.orderStatus = orderStatus;
+  }
 }

@@ -14,4 +14,7 @@ public interface OrderUseCase {
   void confirmOrder(Long orderId);
 
   void cancelOrder(Long orderId);
+
+  // 주문 취소
+  void orderCancel(Long orderId);
 }
