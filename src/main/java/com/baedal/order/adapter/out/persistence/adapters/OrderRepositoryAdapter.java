@@ -1,6 +1,7 @@
 package com.baedal.order.adapter.out.persistence.adapters;
 
 import com.baedal.order.adapter.out.persistence.entity.OrderEntity;
+import com.baedal.order.adapter.out.persistence.enums.OrderEntityStatus;
 import com.baedal.order.adapter.out.persistence.manager.OrderCreator;
 import com.baedal.order.adapter.out.persistence.manager.OrderReader;
 import com.baedal.order.adapter.out.persistence.mapper.OrderPersistenceMapper;
@@ -30,6 +31,13 @@ public class OrderRepositoryAdapter implements OrderRepositoryPort {
   public Order findById(Long id) {
     OrderEntity entity = orderReader.findById(id);
     return orderMapper.toDomain(entity);
+  }
+
+  @Override
+  public void changeOrderStatus(Long orderId, OrderStatus status) {
+    OrderEntity entity = orderReader.findById(orderId);
+    OrderEntityStatus orderEntityStatus = orderMapper.mapStatusEnum(status);
+    entity.changeOrderStaus(orderEntityStatus);
   }
 
   @Override

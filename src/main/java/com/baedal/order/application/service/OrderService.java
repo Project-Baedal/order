@@ -13,12 +13,14 @@ import com.baedal.order.domain.business.FutureManager;
 import com.baedal.order.domain.business.OrderValidator;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.Order;
+import com.baedal.order.domain.model.OrderStatus;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
+import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import com.baedal.order.domain.model.payment.GetPaymentUrl.Response;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
+import com.baedal.order.domain.model.rider.AddRiderQueueRequest;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
-import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -74,7 +76,7 @@ public class OrderService implements OrderUseCase {
         customerId,
         req.getProductInfo(),
         req.getStoreId()
-        );
+    );
     messageSenderPort.validateCartOrderInfo(cartReq);
 
     // 상품이 판매 중인지 상태 확인
@@ -122,8 +124,20 @@ public class OrderService implements OrderUseCase {
       messageSenderPort.approvePayment(orderTransactionId);
       orderValidateCacheRepositoryPort.deleteKey(orderTransactionId);
     });
+  }
 
+  @Transactional
+  public void confirmOrder(Long orderId) {
+    AddRiderQueueRequest req = mapper.addRiderQueueRequest(orderId);
+    messageSenderPort.orderAccepted_addRiderQueue(orderId, req);
 
+    orderRepository.changeOrderStatus(orderId, OrderStatus.ACCEPTED);
+  }
+
+  @Transactional
+  public void cancelOrder(Long orderId) {
+    // TODO: 주문 환불
+    orderRepository.changeOrderStatus(orderId, OrderStatus.DENIED);
   }
 
   @Override

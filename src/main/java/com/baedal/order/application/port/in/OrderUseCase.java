@@ -11,6 +11,10 @@ public interface OrderUseCase {
   // 주문 검증
   void orderValidate(OrderValidateCommand.Request req);
 
+  void confirmOrder(Long orderId);
+
+  void cancelOrder(Long orderId);
+
   // 주문 취소
   void orderCancel(Long orderId);
 }

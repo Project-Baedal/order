@@ -6,9 +6,10 @@ import com.baedal.order.application.command.OrderValidateCommand;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
-import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
-import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl;
+import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
+import com.baedal.order.domain.model.rider.AddRiderQueueRequest;
+import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -33,7 +34,9 @@ public interface OrderApplicationMapper {
 
   default List<Long> getProductId(List<ProductInfo> productInfo) {
     return productInfo.stream().map(ProductInfo::getProductId).toList();
-  };
+  }
+
+  ;
 
   ValidateProductOrderInfo.Request validateProductOrderInfoToDomain(
       List<AddOrderCommand.ProductInfo> productInfo,
@@ -51,5 +54,8 @@ public interface OrderApplicationMapper {
 
   // 주문 검증
   ValidateResult orderValidateResultToDomain(OrderValidateCommand.Request req);
+
   AddOrderValidate addOrderValidateToDomain(OrderValidateCommand.Request req);
+
+  AddRiderQueueRequest addRiderQueueRequest(Long orderId);
 }

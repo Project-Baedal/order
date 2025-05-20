@@ -3,6 +3,7 @@ package com.baedal.order.adapter.out.messaging;
 import com.baedal.order.application.port.out.MessageSenderPort;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
+import com.baedal.order.domain.model.rider.AddRiderQueueRequest;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class MessageSenderAdapter implements MessageSenderPort {
 
   @Override
   public void validateProductOrderInfo(ValidateProductOrderInfo.Request req) {
-    kafkaSender.sendMessage("product.validateProductOrderInfo", req.getOrderTransactionId(),req);
+    kafkaSender.sendMessage("product.validateProductOrderInfo", req.getOrderTransactionId(), req);
   }
 
   @Override
@@ -40,6 +41,11 @@ public class MessageSenderAdapter implements MessageSenderPort {
     kafkaSender.sendMessage("payment.failOrder", orderTransactionId, errorMessage);
   }
 
+  @Override
+  public void orderAccepted_addRiderQueue(Long orderId, AddRiderQueueRequest req) {
+    // FIXME: rider or delivery domain 에서 받을 지 정하고 수정해야 함
+    kafkaSender.sendMessage("rider.addRiderQueue", orderId.toString(), req);
+  }
   @Override
   public void cancelPayment(Long paymentId) {
     kafkaSender.sendMessage("payment.cancelPayment", paymentId.toString(), paymentId);
