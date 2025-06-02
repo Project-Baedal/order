@@ -18,4 +18,7 @@ public class Order {
   private String orderStatus;
   private LocalDateTime orderDate;
 
+  public void updatedOrderStatus(OrderStatus orderStatus) {
+    this.orderStatus = orderStatus;
+  }
 }

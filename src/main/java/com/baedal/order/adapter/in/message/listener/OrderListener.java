@@ -29,6 +29,25 @@ public class OrderListener {
     orderUseCase.orderValidate(command);
   }
 
+  @KafkaListener(topics = "order.accept", groupId = "order-accept-group")
+  public void acceptOrder(ConsumerRecord<String, String> record) {
+    long orderId = Long.parseLong(record.key());
+    orderUseCase.confirmOrder(orderId);
+  }
+
+  @KafkaListener(topics = "order.deny", groupId = "order-deny-group")
+  public void denyOrder(ConsumerRecord<String, String> record) {
+    long orderId = Long.parseLong(record.key());
+    orderUseCase.cancelOrder(orderId);
+  }
+
+  @KafkaListener(topics = "order.orderCancel", groupId = "order-cancel-group")
+  public void orderCancel(ConsumerRecord<String, String> record) {
+    Long orderId = Long.valueOf(record.key());
+    orderUseCase.orderCancel(orderId);
+  }
+
+
   @KafkaListener(topics = "order.orderSuccess", groupId = "order-validate-group")
   public void orderSuccess(ConsumerRecord<String, String> record) {
     OrderSuccessRequest req = converter.jsonToDto(record.value(), OrderSuccessRequest.class);

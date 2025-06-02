@@ -16,12 +16,15 @@ import com.baedal.order.domain.business.OrderValidator;
 import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.TempOrder;
+import com.baedal.order.domain.model.Order;
+import com.baedal.order.domain.model.OrderStatus;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
+import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import com.baedal.order.domain.model.payment.GetPaymentUrl.Response;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
+import com.baedal.order.domain.model.rider.AddRiderQueueRequest;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
-import com.baedal.order.domain.model.payment.GetPaymentUrl;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -77,7 +80,7 @@ public class OrderService implements OrderUseCase {
         customerId,
         req.getProductInfo(),
         req.getStoreId()
-        );
+    );
     messageSenderPort.validateCartOrderInfo(cartReq);
 
     // 상품이 판매 중인지 상태 확인
@@ -125,7 +128,36 @@ public class OrderService implements OrderUseCase {
       messageSenderPort.approvePayment(orderTransactionId);
       orderValidateCacheRepositoryPort.deleteKey(orderTransactionId);
     });
+  }
 
+  @Transactional
+  public void confirmOrder(Long orderId) {
+    AddRiderQueueRequest req = mapper.addRiderQueueRequest(orderId);
+    messageSenderPort.orderAccepted_addRiderQueue(orderId, req);
+
+    orderRepositoryPort.changeOrderStatus(orderId, OrderStatus.ACCEPTED);
+  }
+
+  @Transactional
+  public void cancelOrder(Long orderId) {
+    // TODO: 주문 환불
+    orderRepositoryPort.changeOrderStatus(orderId, OrderStatus.DENIED);
+  }
+
+  @Override
+  @Transactional
+  public void orderCancel(Long orderId) {
+    // 주문이 존재하는지 조회
+    Order order = orderRepositoryPort.findById(orderId);
+
+    // 주문 상태 검증
+    orderValidator.validateSucceededStatus(order);
+
+    // 주문의 상태를 변경
+    orderRepositoryPort.cancelOrderById(order);
+
+    // 환불 요청
+    messageSenderPort.cancelPayment(order.getPaymentId());
 
   }
 

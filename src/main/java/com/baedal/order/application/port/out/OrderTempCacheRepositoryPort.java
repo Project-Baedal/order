@@ -7,5 +7,6 @@ public interface OrderTempCacheRepositoryPort {
 
   void saveTempOrder(String orderTransactionId, AddOrderCommand.Request req);
 
+  TempOrder getTempOrder(String orderTransactionId);
   TempOrder findByTransactionId(String transactionId);
 }

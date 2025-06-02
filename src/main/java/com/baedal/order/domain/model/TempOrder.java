@@ -1,5 +1,6 @@
 package com.baedal.order.domain.model;
 
+import com.baedal.order.adapter.out.persistence.dto.PaymentInfoDto;
 import com.baedal.order.adapter.out.persistence.dto.ProductInfoDto;
 import java.util.List;
 import lombok.Builder;
@@ -14,4 +15,6 @@ public class TempOrder {
   private List<ProductInfoDto> productIds;
   private String deliveryAddress;
   private String phoneNumber;
+  private PaymentInfoDto paymentInfo;
+  private int deliveryAmount;
 }

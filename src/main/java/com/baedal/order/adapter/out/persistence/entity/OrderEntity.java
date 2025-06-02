@@ -4,6 +4,8 @@ import com.baedal.order.adapter.out.persistence.enums.OrderEntityStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +37,9 @@ public class OrderEntity {
   @Column(nullable = false)
   private Long paymentId;
 
+  @Column(nullable = false)
+  private Long customerId;
+
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "order_id")
   private List<ProductEntity> products;
@@ -45,6 +50,7 @@ public class OrderEntity {
   @Column(nullable = false)
   private String phoneNumber;
 
+  @Enumerated(EnumType.ORDINAL)
   @Column(nullable = false)
   private OrderEntityStatus orderStatus;
 
@@ -52,15 +58,20 @@ public class OrderEntity {
   private LocalDateTime createdAt;
 
   @Builder
-  public OrderEntity(Long storeId, Long paymentId, List<ProductEntity> products,
+  public OrderEntity(Long storeId, Long paymentId, Long customerId, List<ProductEntity> products,
       String deliveryAddress, String phoneNumber, OrderEntityStatus orderStatus,
       LocalDateTime createdAt) {
     this.storeId = storeId;
     this.paymentId = paymentId;
+    this.customerId = customerId;
     this.products = products;
     this.deliveryAddress = deliveryAddress;
     this.phoneNumber = phoneNumber;
     this.orderStatus = orderStatus;
     this.createdAt = createdAt;
+  }
+
+  public void changeOrderStaus(OrderEntityStatus status) {
+    this.orderStatus = status;
   }
 }

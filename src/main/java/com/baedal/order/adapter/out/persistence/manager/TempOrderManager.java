@@ -17,7 +17,6 @@ public class TempOrderManager {
     return PREFIX + key;
   }
 
-
   public void saveTempOrder(String orderTransactionId, SaveTempOrderDto dto) {
     String key = getKey(orderTransactionId);
     orderRedisRepository.saveObject(key, dto);
@@ -26,5 +25,16 @@ public class TempOrderManager {
   public SaveTempOrderDto getTempOrder(String orderTransactionId) {
     String key = getKey(orderTransactionId);
     return (SaveTempOrderDto) orderRedisRepository.getKey(key);
+  }
+
+  public SaveTempOrderDto getTempOrder(String orderTransactionId) {
+    Object object = orderRedisRepository.get(getKey(orderTransactionId));
+    if (object == null) {
+      return null;
+    }
+    if (!(object instanceof SaveTempOrderDto)) {
+      throw new RuntimeException("Failed to cast object to SaveTempOrderDto.");
+    }
+    return (SaveTempOrderDto) object;
   }
 }
