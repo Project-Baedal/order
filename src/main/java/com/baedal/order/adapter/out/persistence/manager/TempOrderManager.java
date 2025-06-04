@@ -19,11 +19,11 @@ public class TempOrderManager {
 
   public void saveTempOrder(String orderTransactionId, SaveTempOrderDto dto) {
     String key = getKey(orderTransactionId);
-    orderRedisRepository.save(key, dto);
+    orderRedisRepository.saveObject(key, dto);
   }
 
   public SaveTempOrderDto getTempOrder(String orderTransactionId) {
-    Object object = orderRedisRepository.get(getKey(orderTransactionId));
+    Object object = orderRedisRepository.getKey(getKey(orderTransactionId));
     if (object == null) {
       return null;
     }

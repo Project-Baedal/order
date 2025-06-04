@@ -1,6 +1,7 @@
 package com.baedal.order.application.port.in;
 
 import com.baedal.order.application.command.AddOrderCommand;
+import com.baedal.order.application.command.OrderSuccessCommand;
 import com.baedal.order.application.command.OrderValidateCommand;
 
 public interface OrderUseCase {
@@ -17,4 +18,7 @@ public interface OrderUseCase {
 
   // 주문 취소
   void orderCancel(Long orderId);
+
+  // 주문 성공
+  void orderSuccess(OrderSuccessCommand.Request req);
 }

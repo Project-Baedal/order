@@ -35,10 +35,10 @@ public class OrderEntity {
   private Long storeId;
 
   @Column(nullable = false)
-  private Long customerId;
+  private Long paymentId;
 
   @Column(nullable = false)
-  private Long paymentId;
+  private Long customerId;
 
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "order_id")
@@ -50,15 +50,6 @@ public class OrderEntity {
   @Column(nullable = false)
   private String phoneNumber;
 
-  @Column(nullable = false)
-  private String paymentMethod;
-
-  @Column(nullable = false)
-  private int deliveryAmount;
-
-  @Column(nullable = false)
-  private int totalAmount;
-
   @Enumerated(EnumType.ORDINAL)
   @Column(nullable = false)
   private OrderEntityStatus orderStatus;
@@ -68,17 +59,14 @@ public class OrderEntity {
 
   @Builder
   public OrderEntity(Long storeId, Long paymentId, Long customerId, List<ProductEntity> products,
-      String deliveryAddress, String phoneNumber, String paymentMethod, int deliveryAmount,
-      int totalAmount, OrderEntityStatus orderStatus, LocalDateTime createdAt) {
+      String deliveryAddress, String phoneNumber, OrderEntityStatus orderStatus,
+      LocalDateTime createdAt) {
     this.storeId = storeId;
     this.paymentId = paymentId;
     this.customerId = customerId;
     this.products = products;
     this.deliveryAddress = deliveryAddress;
     this.phoneNumber = phoneNumber;
-    this.paymentMethod = paymentMethod;
-    this.deliveryAmount = deliveryAmount;
-    this.totalAmount = totalAmount;
     this.orderStatus = orderStatus;
     this.createdAt = createdAt;
   }

@@ -17,7 +17,7 @@ public class ValidateProductOrderInfo {
   @Getter
   @Builder
   public static class ProductInfo {
-      private Long productId;
+    private Long productId;
     private String productName;
     private int price;
   }

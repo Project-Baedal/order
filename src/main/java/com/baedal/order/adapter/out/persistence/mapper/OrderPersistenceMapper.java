@@ -10,6 +10,7 @@ import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.AddOrderProduct;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.Order;
+import com.baedal.order.domain.model.TempOrder;
 import com.baedal.order.domain.model.OrderStatus;
 import com.baedal.order.domain.model.TempOrder;
 import com.baedal.order.domain.model.ValidateResult;
@@ -44,4 +45,7 @@ public interface OrderPersistenceMapper {
   OrderEntityStatus mapStatusEnum(OrderStatus status);
 
   TempOrder toDomain(SaveTempOrderDto dto);
+
+  // 임시 주문 조회
+  TempOrder saveTempOrderToTempOrder(SaveTempOrderDto dto);
 }

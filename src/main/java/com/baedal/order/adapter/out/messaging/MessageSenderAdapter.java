@@ -1,5 +1,6 @@
 package com.baedal.order.adapter.out.messaging;
 
+import com.baedal.order.application.command.store.RequestStoreOrderCommand.Request;
 import com.baedal.order.application.port.out.MessageSenderPort;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
@@ -49,6 +50,12 @@ public class MessageSenderAdapter implements MessageSenderPort {
   @Override
   public void cancelPayment(Long paymentId) {
     kafkaSender.sendMessage("payment.cancelPayment", paymentId.toString(), paymentId);
+  }
+
+  @Override
+  public void requestStoreOrder(Request req) {
+    String key = req.getStoreId().toString();
+    kafkaSender.sendMessage("payment.requestStoreOrder", key, req);
   }
 
 }

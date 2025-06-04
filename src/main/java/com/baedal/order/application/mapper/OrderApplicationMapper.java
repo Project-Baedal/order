@@ -3,7 +3,10 @@ package com.baedal.order.application.mapper;
 import com.baedal.order.application.command.AddOrderCommand;
 import com.baedal.order.application.command.AddOrderCommand.ProductInfo;
 import com.baedal.order.application.command.OrderValidateCommand;
+import com.baedal.order.application.command.store.RequestStoreOrderCommand;
+import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.AddOrderValidate;
+import com.baedal.order.domain.model.TempOrder;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.payment.GetPaymentUrl;
@@ -58,4 +61,10 @@ public interface OrderApplicationMapper {
   AddOrderValidate addOrderValidateToDomain(OrderValidateCommand.Request req);
 
   AddRiderQueueRequest addRiderQueueRequest(Long orderId);
+
+  // 주문 성공
+  AddOrder tempOrderToDomain(TempOrder tempOrder);
+
+  RequestStoreOrderCommand.Request addOrderToDomain(AddOrder addOrder);
+
 }

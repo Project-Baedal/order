@@ -12,16 +12,20 @@ public class OrderRedisRepository {
   private final RedisTemplate<String, Object> redisTemplate;
 
 
-  public void save(String key, Object value) {
+  public void saveSet(String key, Object value) {
     redisTemplate.opsForSet().add(key, value);
   }
 
-  public Object get(String key) {
-    return redisTemplate.opsForSet().pop(key);
+  public void saveObject(String key, Object value) {
+    redisTemplate.opsForValue().set(key, value);
   }
 
   public Set<Object> getKeys(String key) {
     return redisTemplate.opsForSet().members(key);
+  }
+
+  public Object getKey(String key) {
+    return redisTemplate.opsForValue().get(key);
   }
 
   public void deleteKey(String key) {

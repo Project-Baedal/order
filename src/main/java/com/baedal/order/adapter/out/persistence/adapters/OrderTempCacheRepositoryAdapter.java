@@ -27,4 +27,11 @@ public class OrderTempCacheRepositoryAdapter implements OrderTempCacheRepository
     SaveTempOrderDto dto = tempOrderManager.getTempOrder(orderTransactionId);
     return orderMapper.toDomain(dto);
   }
+
+  @Override
+  public TempOrder findByTransactionId(String transactionId) {
+    SaveTempOrderDto dto = tempOrderManager.getTempOrder(transactionId);
+    return orderMapper.saveTempOrderToTempOrder(dto);
+  }
+
 }
