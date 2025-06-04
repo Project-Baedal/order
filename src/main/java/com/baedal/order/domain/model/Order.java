@@ -15,7 +15,7 @@ public class Order {
   private List<AddOrderProduct> productInfo;
   private String deliveryAddress;
   private String phoneNumber;
-  private String orderStatus;
+  private OrderStatus orderStatus;
   private LocalDateTime orderDate;
 
   public void updatedOrderStatus(OrderStatus orderStatus) {

@@ -28,7 +28,6 @@ public class OrderRedisRepository {
     return redisTemplate.opsForValue().get(key);
   }
 
-
   public void deleteKey(String key) {
     redisTemplate.delete(key);
   }
