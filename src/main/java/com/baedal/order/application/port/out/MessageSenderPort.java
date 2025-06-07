@@ -1,6 +1,7 @@
 package com.baedal.order.application.port.out;
 
 import com.baedal.order.application.command.store.RequestStoreOrderCommand;
+import com.baedal.order.domain.model.FailOrder;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.rider.AddRiderQueueRequest;
@@ -23,4 +24,6 @@ public interface MessageSenderPort {
   void cancelPayment(Long paymentId);
 
   void requestStoreOrder(RequestStoreOrderCommand.Request req);
+
+  void failOrder(FailOrder.Request req);
 }
