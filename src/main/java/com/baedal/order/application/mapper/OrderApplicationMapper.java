@@ -6,7 +6,7 @@ import com.baedal.order.application.command.OrderValidateCommand;
 import com.baedal.order.application.command.store.RequestStoreOrderCommand;
 import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.AddOrderValidate;
-import com.baedal.order.domain.model.FailOrder;
+import com.baedal.order.domain.model.OrderStatus;
 import com.baedal.order.domain.model.TempOrder;
 import com.baedal.order.domain.model.ValidateResult;
 import com.baedal.order.domain.model.cart.ValidateCartOrderInfo;
@@ -69,5 +69,5 @@ public interface OrderApplicationMapper {
   RequestStoreOrderCommand.Request addOrderToDomain(AddOrder addOrder);
 
   // 만료 주문 취소
-  FailOrder.Request cancelExpiredOrderToDomain(String orderTransactionId, String domain);
+  AddOrder addFailOrderToDomain(TempOrder tempOrder, OrderStatus orderStatus);
 }

@@ -209,10 +209,11 @@ public class OrderService implements OrderUseCase {
     // 결제가 진행된 경우, 실패 도메인 추출
     String failDomain = orderExtractor.validateFailDomain(validates);
 
-    // 주문 실패 메세지 큐 전송
-    FailOrder.Request cancelOrder = mapper.cancelExpiredOrderToDomain(
-        transactionId, failDomain
-    );
-    messageSenderPort.failOrder(cancelOrder);
+    // 임시 주문 정보 조회
+    TempOrder tempOrder = orderTempCacheRepositoryPort.findByTransactionId(transactionId);
+
+    // 주문 저장
+    AddOrder addOrder = mapper.addFailOrderToDomain(tempOrder, OrderStatus.CANCELED);
+    orderRepositoryPort.save(addOrder);
   }
 }
