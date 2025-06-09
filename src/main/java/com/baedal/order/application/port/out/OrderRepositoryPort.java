@@ -1,11 +1,14 @@
 package com.baedal.order.application.port.out;
 
+import com.baedal.order.domain.model.AddFailOrder;
 import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.Order;
 import com.baedal.order.domain.model.OrderStatus;
 
 public interface OrderRepositoryPort {
   Order save(AddOrder addOrder);
+
+  void save(AddFailOrder addFailOrder);
 
   Order findById(Long id);
 

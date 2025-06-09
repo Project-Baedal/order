@@ -16,9 +16,9 @@ import com.baedal.order.domain.business.FutureManager;
 import com.baedal.order.domain.business.OrderCalculator;
 import com.baedal.order.domain.business.OrderExtractor;
 import com.baedal.order.domain.business.OrderValidator;
+import com.baedal.order.domain.model.AddFailOrder;
 import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.AddOrderValidate;
-import com.baedal.order.domain.model.FailOrder;
 import com.baedal.order.domain.model.TempOrder;
 import com.baedal.order.domain.model.Order;
 import com.baedal.order.domain.model.OrderStatus;
@@ -206,14 +206,16 @@ public class OrderService implements OrderUseCase {
       return;
     }
 
-    // 결제가 진행된 경우, 실패 도메인 추출
-    String failDomain = orderExtractor.validateFailDomain(validates);
+    // 결제가 진행된 경우, 실패 사유 추출
+    String reason = orderExtractor.validateFailDomain(validates);
 
     // 임시 주문 정보 조회
     TempOrder tempOrder = orderTempCacheRepositoryPort.findByTransactionId(transactionId);
 
     // 주문 저장
-    AddOrder addOrder = mapper.addFailOrderToDomain(tempOrder, OrderStatus.CANCELED);
-    orderRepositoryPort.save(addOrder);
+    AddFailOrder addFailOrder = mapper.addFailOrderToDomain(
+        tempOrder, reason, OrderStatus.CANCELED
+    );
+    orderRepositoryPort.save(addFailOrder);
   }
 }
