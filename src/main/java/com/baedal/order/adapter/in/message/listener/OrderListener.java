@@ -1,8 +1,10 @@
 package com.baedal.order.adapter.in.message.listener;
 
+import com.baedal.order.adapter.in.message.dto.CancelExpiredOrderRequest;
 import com.baedal.order.adapter.in.message.dto.OrderSuccessRequest;
 import com.baedal.order.adapter.in.message.dto.OrderValidateRequest;
 import com.baedal.order.adapter.in.message.mapper.OrderListenerMapper;
+import com.baedal.order.application.command.CancelExpiredOrderCommand;
 import com.baedal.order.application.command.OrderSuccessCommand;
 import com.baedal.order.application.command.OrderValidateCommand;
 import com.baedal.order.application.port.in.OrderUseCase;
@@ -53,6 +55,15 @@ public class OrderListener {
     OrderSuccessRequest req = converter.jsonToDto(record.value(), OrderSuccessRequest.class);
     OrderSuccessCommand.Request command = mapper.orderSuccessToCommand(req);
     orderUseCase.orderSuccess(command);
+  }
+
+  @KafkaListener(topics = "order.CancelExpiredOrder", groupId = "order-cancel-group")
+  public void CancelExpiredOrder(ConsumerRecord<String, String> record) {
+    CancelExpiredOrderRequest req = converter.jsonToDto(
+        record.value(), CancelExpiredOrderRequest.class
+    );
+    CancelExpiredOrderCommand.Request command = mapper.cancelExpiredOrderToCommand(req);
+    orderUseCase.cancelExpiredOrder(command);
   }
 
 }

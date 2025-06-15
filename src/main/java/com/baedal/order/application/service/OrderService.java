@@ -1,6 +1,7 @@
 package com.baedal.order.application.service;
 
 import com.baedal.order.application.command.AddOrderCommand;
+import com.baedal.order.application.command.CancelExpiredOrderCommand;
 import com.baedal.order.application.command.OrderSuccessCommand;
 import com.baedal.order.application.command.OrderValidateCommand.Request;
 import com.baedal.order.application.command.store.RequestStoreOrderCommand;
@@ -12,7 +13,10 @@ import com.baedal.order.application.port.out.OrderTempCacheRepositoryPort;
 import com.baedal.order.application.port.out.OrderValidateCacheRepositoryPort;
 import com.baedal.order.application.port.out.PaymentClientPort;
 import com.baedal.order.domain.business.FutureManager;
+import com.baedal.order.domain.business.OrderCalculator;
+import com.baedal.order.domain.business.OrderExtractor;
 import com.baedal.order.domain.business.OrderValidator;
+import com.baedal.order.domain.model.AddFailOrder;
 import com.baedal.order.domain.model.AddOrder;
 import com.baedal.order.domain.model.AddOrderValidate;
 import com.baedal.order.domain.model.TempOrder;
@@ -25,6 +29,7 @@ import com.baedal.order.domain.model.payment.GetPaymentUrl.Response;
 import com.baedal.order.domain.model.product.ValidateProductOrderInfo;
 import com.baedal.order.domain.model.rider.AddRiderQueueRequest;
 import com.baedal.order.domain.model.store.ValidateStoreOrderInfo;
+import com.baedal.order.util.ThreadUtil;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -40,6 +45,8 @@ public class OrderService implements OrderUseCase {
 
   private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
   private final FutureManager futureManager = new FutureManager();
+  private final OrderCalculator orderCalculator = new OrderCalculator();
+  private final OrderExtractor orderExtractor = new OrderExtractor();
 
   private final OrderApplicationMapper mapper;
   private final OrderValidateCacheRepositoryPort orderValidateCacheRepositoryPort;
@@ -176,5 +183,39 @@ public class OrderService implements OrderUseCase {
     // 매장 주문 요청 메세지 큐 전달
     RequestStoreOrderCommand.Request storeRequest = mapper.addOrderToDomain(order);
     messageSenderPort.requestStoreOrder(storeRequest);
+  }
+
+  @Override
+  @Transactional
+  public void cancelExpiredOrder(CancelExpiredOrderCommand.Request req) {
+
+    String transactionId = req.getOrderTransactionId();
+
+    // 처리 시간까지 남은 시간만큼 대기
+    long sleepMillis = orderCalculator.millisSinceNow(req.getExpiredAt());
+    if (sleepMillis > 0) ThreadUtil.sleep(sleepMillis);
+
+    // 검증 현황 조회
+    Set<ValidateResult> validates = orderValidateCacheRepositoryPort.getOrderValidationStatus(
+        transactionId
+    );
+
+    if (!orderValidator.isPaymentValidated(validates)) {
+      // 결제가 진행되지 않았으면 검증 결과 삭제
+      orderValidateCacheRepositoryPort.deleteKey(transactionId);
+      return;
+    }
+
+    // 결제가 진행된 경우, 실패 사유 추출
+    String reason = orderExtractor.validateFailDomain(validates);
+
+    // 임시 주문 정보 조회
+    TempOrder tempOrder = orderTempCacheRepositoryPort.findByTransactionId(transactionId);
+
+    // 주문 저장
+    AddFailOrder addFailOrder = mapper.addFailOrderToDomain(
+        tempOrder, reason, OrderStatus.CANCELED
+    );
+    orderRepositoryPort.save(addFailOrder);
   }
 }
