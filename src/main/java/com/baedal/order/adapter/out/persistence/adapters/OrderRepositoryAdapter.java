@@ -41,7 +41,7 @@ public class OrderRepositoryAdapter implements OrderRepositoryPort {
     OrderEntity entity = orderMapper.toEntity(addFailOrder);
     orderCreator.save(entity);
 
-    OrderReasonEntity reason = orderReasonMapper.toEntity(entity);
+    OrderReasonEntity reason = orderReasonMapper.toEntity(entity, addFailOrder.getReason());
     orderReasonCreator.save(reason);
   }
 

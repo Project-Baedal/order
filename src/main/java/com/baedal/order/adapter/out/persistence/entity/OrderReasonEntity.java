@@ -1,5 +1,6 @@
 package com.baedal.order.adapter.out.persistence.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,8 +29,12 @@ public class OrderReasonEntity {
   @JoinColumn(name = "order_id")
   private OrderEntity order;
 
+  @Column(nullable = false)
+  private String reason;
+
   @Builder
-  public OrderReasonEntity(OrderEntity order) {
+  public OrderReasonEntity(OrderEntity order, String reason) {
     this.order = order;
+    this.reason = reason;
   }
 }

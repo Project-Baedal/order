@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface OrderReasonPersistenceMapper {
 
-  OrderReasonEntity toEntity(OrderEntity orderEntity);
+  OrderReasonEntity toEntity(OrderEntity orderEntity, String reason);
 }
